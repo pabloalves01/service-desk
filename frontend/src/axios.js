@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   },
 });
 
-HttpProxy.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {

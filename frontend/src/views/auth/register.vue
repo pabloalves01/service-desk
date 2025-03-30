@@ -1,42 +1,44 @@
 <!-- src/views/Login.vue -->
 <template>
     <div>
-      <h2 class="text-white mb-2 text-lg">Login</h2>
+      <h2 class="text-white mb-4 text-7xl">Registro</h2>
+      <input v-model="name" type="name" placeholder="Nome" style="margin-right: 10px;" />
       <input v-model="email" type="email" placeholder="Email" style="margin-right: 10px;" />
       <input v-model="password" type="password" placeholder="Senha" style="margin-right: 10px;" />
-      <button class="bg-green-500 px-10" @click="login">Login</button>
+      <button class="bg-green-500 px-10" @click="register">Registrar</button>
       <p v-if="error">{{ error }}</p>
     </div>
-
-    <div class="bg-purple-500 mt-10 w-36">REGISTRE-SE AQUI</div>
-    <RouterLink to="/register" class="text-white underline">Registrar</RouterLink>
 
   </template>
   
   <script setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import axiosInstance from '../../axios'; 
   
+  const name = ref('');
   const email = ref('');
   const password = ref('');
   const error = ref('');
   const router = useRouter();
   
-  const login = async () => {
+  const register = async () => {
     try {
-      const response = await http.post('/login', {
+      const response = await axiosInstance.post('/register', { 
+        name: name.value,
         email: email.value,
         password: password.value,
       });
   
-      // Salvar o token no localStorage
       localStorage.setItem('token', response.data.token);
   
-      // Redirecionar para o Dashboard ou outra página
       router.push('/');
     } catch (err) {
-      error.value = 'Credenciais inválidas';
+      error.value = 'Erro ao registrar o usuário.';
+      console.error(err);
     }
   };
   </script>
+  
+  
   

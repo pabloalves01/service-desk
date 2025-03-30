@@ -1,7 +1,6 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/auth/login.vue'
-import Teste from '../views/Teste.vue'
 
 const routes = [
   {
@@ -12,12 +11,16 @@ const routes = [
   {
     path: '/',
     name: 'Teste',
-    component: Teste,
+    component: () => import('../views/Teste.vue'),
     meta: {
       requiresAuth: true,
     },
   },
-  
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/auth/register.vue'),
+  }
 ]
 
 const router = createRouter({
@@ -26,8 +29,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+  const token = localStorage.getItem('token');
+  if (to.meta.requiresAuth && !token) {
     next('/login');
+  } else if (token && to.path === '/login') {
+    next('/'); 
   } else {
     next();
   }
