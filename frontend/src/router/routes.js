@@ -34,7 +34,10 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else if (token && to.path === '/login') {
     next('/'); 
-  } else {
+  } else if (token && to.path === '/register') {
+    next('/'); 
+  }
+  else {
     next();
   }
 });
