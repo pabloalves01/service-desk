@@ -1,3 +1,3 @@
 <template>
-  <div>teste</div>
+  <div class="bg-blue-500">teste page</div>
 </template>

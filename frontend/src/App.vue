@@ -21,7 +21,7 @@ onMounted(fetchMessage)
 
 <template>
   <div class="container">
-    <Sidebar />
+    <!-- <Sidebar /> -->
     <main>
       <router-view />
       <p v-if="message">{{ message }}</p>
