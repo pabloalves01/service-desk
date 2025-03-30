@@ -1,11 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import Sidebar from './components/comum/sidebar.vue'
-
-const message = ref('')
-const errorMessage = ref('')
-
 </script>
 
 <template>
@@ -16,18 +11,3 @@ const errorMessage = ref('')
     </main>
   </div>
 </template>
-
-<style scoped>
-.container {
-  display: flex;
-}
-
-main {
-  flex: 1;
-  padding: 1rem;
-}
-
-.error {
-  color: red;
-}
-</style>

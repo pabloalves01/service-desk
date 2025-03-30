@@ -1,7 +1,7 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/auth/login.vue'
-
+import { isTokenExpired } from '../utils/auth'
 const routes = [
   {
     path: '/login',
@@ -30,17 +30,20 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
+
   if (to.meta.requiresAuth && !token) {
     next('/login');
-  } else if (token && to.path === '/login') {
-    next('/'); 
-  } else if (token && to.path === '/register') {
-    next('/'); 
-  }
+  } 
+  else if (token && isTokenExpired(token)) {
+    localStorage.removeItem('token');
+    next('/login');
+  } 
+  else if (token && (to.path === '/login' || to.path === '/register')) {
+    next('/');
+  } 
   else {
     next();
   }
 });
-
 
 export default router
