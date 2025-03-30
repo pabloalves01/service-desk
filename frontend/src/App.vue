@@ -1,12 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import Sidebar from './components/comum/sidebar.vue'
+
+const route = useRoute()
+
 </script>
 
 <template>
-  <div class="container">
-    <!-- <Sidebar /> -->
-    <main>
+  <div class="flex h-screen">
+    <Sidebar v-if="route.meta.requiresAuth" class="w-64 bg-gray-800" />
+    <main class="flex-1 p-4">
       <router-view />
     </main>
   </div>
