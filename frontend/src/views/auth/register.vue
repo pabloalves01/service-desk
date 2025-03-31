@@ -14,7 +14,7 @@
   <script setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import axiosInstance from '../../axios'; 
+  import axios from '../../axios'; 
   
   const name = ref('');
   const email = ref('');
@@ -24,7 +24,7 @@
   
   const register = async () => {
     try {
-      const response = await axiosInstance.post('/register', { 
+      const response = await axios.post('/register', { 
         name: name.value,
         email: email.value,
         password: password.value,

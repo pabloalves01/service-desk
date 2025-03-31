@@ -9,7 +9,7 @@ const route = useRoute()
 <template>
   <div class="flex h-screen">
     <Sidebar v-if="route.meta.requiresAuth" class="w-64 bg-gray-800" />
-    <main class="flex-1 p-4">
+    <main class="flex-1">
       <router-view />
     </main>
   </div>
