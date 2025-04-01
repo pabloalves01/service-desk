@@ -58,6 +58,7 @@ export default {
                 const response = await axios.delete(`/product/${this.selectProduto.id}`);
                 console.log("Produto deletado:", response.data);
                 this.getProdutos();
+                this.isOpenModal = false;
             } catch (error) {
                 console.error(error);
             }
