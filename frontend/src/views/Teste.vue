@@ -1,3 +1,6 @@
 <template>
-  <div class="bg-blue-500">ESTOU LOGADO</div>
+  <div>Home</div>
+  <router-link to="/produto" class="bg-white">
+    cadastrar produto
+  </router-link>
 </template>

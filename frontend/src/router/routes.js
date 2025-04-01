@@ -1,6 +1,8 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/auth/login.vue'
+import gerenciarProdutos from '@/views/produtos/gerenciar-produtos.vue'
+import CadastrarProduto from '@/views/produtos/cadastrar-produto.vue'
 
 import { isTokenExpired } from '../utils/auth'
 const routes = [
@@ -18,6 +20,30 @@ const routes = [
     path: '/',
     name: 'Teste',
     component: () => import('../views/Teste.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/produto',
+    name: 'CadastrarProduto',
+    component: () => import('../views/produtos/cadastrar-produto.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/produto/:id?',
+    name: 'EditarProduto',
+    component: () => import('../views/produtos/cadastrar-produto.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/gerenciar-produtos',
+    name: 'GerenciarProdutos',
+    component: () => import('../views/produtos/gerenciar-produtos.vue'),
     meta: {
       requiresAuth: true,
     },

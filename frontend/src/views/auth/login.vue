@@ -135,7 +135,6 @@ onMounted(() => {
         size: Math.random() * 3 + 1,
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
-        // cor branca
         color: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`
         // color: `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 155)}, 255, 0.7)`
       });
