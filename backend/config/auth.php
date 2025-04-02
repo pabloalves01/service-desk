@@ -42,7 +42,7 @@ return [
         ],
         'api' => [
             'driver' => 'jwt',
-            'provider' => App\Models\User::class,
+            'provider' => 'users',
         ]
     ],
 
