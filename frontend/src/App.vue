@@ -8,8 +8,8 @@ const route = useRoute()
 
 <template>
   <div class="flex h-screen">
-    <Sidebar v-if="route.meta.requiresAuth" class="w-64 bg-gray-800" />
-    <main class="flex-1">
+    <Sidebar v-if="route.meta.requiresAuth" />
+    <main class="flex-1 bg-zinc-900/50 p-10">
       <router-view />
     </main>
   </div>
