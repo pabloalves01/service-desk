@@ -1,265 +1,553 @@
 <template>
-  <div class="sidenav" :class="{ 'dark': isDarkMode }">
-    <div class="w-64 h-screen bg-zinc-950 dark:bg-zinc-950 overflow-y-auto">
-      <!-- Company header -->
-      <div class="flex items-center justify-between p-4">
-        <div class="flex items-center">
-          <div class="w-8 h-8 bg-black dark:bg-gray-800 rounded-md flex items-center justify-center">
-            <file-text-icon class="w-4 h-4 text-white" />
-          </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-gray-100">Acme Inc</h3>
-            <p class="text-xs text-gray-400">Enterprise</p>
-          </div>
+  <div class="sidebar-container" :class="{ 'collapsed': isCollapsed }">
+    <!-- Logo and toggle button -->
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div class="logo">
+          <layout-icon class="logo-icon" />
         </div>
-        <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-          <chevron-down-icon class="w-4 h-4" />
-        </button>
+        <span class="logo-text" v-show="!isCollapsed">{{ logoText }}</span>
       </div>
+      <button @click="toggleSidebar" class="toggle-button">
+        <chevron-left-icon :class="{ 'rotate-180': isCollapsed }" />
+      </button>
+    </div>
 
-      <!-- Navigation -->
-      <div class="px-3 py-2">
-        <p class="px-3 text-xs font-medium text-gray-400 uppercase tracking-wider mb-1">
-          Platform
-        </p>
+    <!-- Search bar -->
+    <div class="search-container" v-show="!isCollapsed">
+      <div class="search-input">
+        <search-icon class="search-icon" />
+        <input type="text" placeholder="Search..." />
+      </div>
+    </div>
 
-        <nav class="space-y-2">
-          <!-- Playground with submenu -->
-          <div>
-            <button 
-              @click="toggleSubmenu('playground')" 
-              class="flex items-center justify-between w-full px-3 py-2 text-sm text-gray-200 rounded-md hover:bg-zinc-800 transition-colors"
-              :class="{ 'bg-zinc-800': activeSubmenu === 'playground' }"
+    <!-- Navigation -->
+    <div class="nav-container">
+      <div v-for="(section, sectionIndex) in navigationSections" :key="sectionIndex" class="nav-section">
+        <div class="section-title" v-show="!isCollapsed">{{ section.title }}</div>
+        
+        <div v-for="(item, itemIndex) in section.items" :key="itemIndex" class="nav-item-wrapper">
+          <!-- Regular menu item -->
+          <router-link 
+            v-if="!item.children" 
+            :to="item.path" 
+            class="nav-item"
+            :class="{ 'active': currentPath === item.path }"
+          >
+            <component :is="item.icon" class="nav-icon" />
+            <span class="nav-text" v-show="!isCollapsed">{{ item.name }}</span>
+            <div v-if="item.badge" class="badge" v-show="!isCollapsed">{{ item.badge }}</div>
+          </router-link>
+
+          <!-- Collapsible menu item with children -->
+          <div v-else class="nav-item-collapsible">
+            <div 
+              @click="toggleSubmenu(item)" 
+              class="nav-item"
+              :class="{ 'active': isSubmenuActive(item) }"
             >
-              <div class="flex items-center">
-                <layout-icon class="w-5 h-5 text-gray-400" />
-                <span class="ml-3">Playground</span>
-              </div>
+              <component :is="item.icon" class="nav-icon" />
+              <span class="nav-text" v-show="!isCollapsed">{{ item.name }}</span>
               <chevron-down-icon 
-                class="w-4 h-4 text-gray-400 transition-transform duration-200" 
-                :class="{ 'transform rotate-180': activeSubmenu === 'playground' }"
+                v-show="!isCollapsed" 
+                class="submenu-arrow"
+                :class="{ 'rotate-180': item.expanded }"
               />
-            </button>
-
-            <!-- Submenu items -->
-            <transition 
-              name="submenu-transition" 
-              @before-enter="beforeEnter" 
-              @enter="enter" 
-              @leave="leave"
-            >
-              <div v-if="activeSubmenu === 'playground'" class="mt-1  space-y-1">
-                <div class="submenu-progress-bar">
-                  <div 
-                    class="progress-line" 
-                    :style="{ height: `${playgroundItems.length * 10}px` }"
-                  ></div>
-                </div>
-                <a 
-                  v-for="(item, index) in playgroundItems" 
-                  :key="index"
-                  href="#"
-                  class="block px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-zinc-800"
-                >
-                  {{ item }}
-                </a>
-              </div>
-            </transition>
-          </div>
-
-          <!-- Other menu items -->
-          <div v-for="(item, index) in menuItems" :key="index">
-            <a 
-              v-if="!item.hasSubmenu"
-              href="#"
-              class="flex items-center justify-between px-3 py-2 text-sm text-gray-200 rounded-md hover:bg-zinc-800 transition-colors"
-            >
-              <div class="flex items-center">
-                <component :is="item.icon" class="w-5 h-5 text-gray-400" />
-                <span class="ml-3">{{ item.name }}</span>
-              </div>
-            </a>
-            <button 
-              v-else
-              @click="toggleSubmenu(item.name)"
-              class="flex items-center justify-between w-full px-3 py-2 text-sm text-gray-200 rounded-md hover:bg-zinc-800 transition-colors"
-              :class="{ 'bg-zinc-800': activeSubmenu === item.name }"
-            >
-              <div class="flex items-center">
-                <component :is="item.icon" class="w-5 h-5 text-gray-400" />
-                <span class="ml-3">{{ item.name }}</span>
-              </div>
-              <chevron-right-icon v-if="item.hasSubmenu" class="w-4 h-4 text-gray-400" />
-            </button>
-
-            <!-- Submenu items -->
-            <transition 
-              name="submenu-transition" 
-              @before-enter="beforeEnter" 
-              @enter="enter" 
-              @leave="leave"
-            >
-              <div v-if="activeSubmenu === item.name" class="mt-1 space-y-1">
-                <div class="submenu-progress-bar">
-                  <div 
-                    class="progress-line" 
-                    :style="{ height: `${item.submenu.length * 10}px` }"
-                  ></div>
-                </div>
-                <a 
-                  v-for="(subitem, subindex) in item.submenu" 
-                  :key="subindex"
-                  href="#"
-                  class="block px-3 py-2 text-sm text-gray-300 rounded-md hover:bg-zinc-800"
-                >
-                  {{ subitem }}
-                </a>
-              </div>
-            </transition>
-          </div>
-        </nav>
-      </div>
-
-      <!-- User profile -->
-      <div class="absolute bottom-0 w-64 border-t border-gray-800">
-        <div class="flex items-center justify-between p-4">
-          <div class="flex items-center">
-            <img 
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bPCCM6lUbXpWelb2K3Qu5yBV8rODZc.png" 
-              alt="User avatar" 
-              class="w-8 h-8 rounded-full object-cover"
-            />
-            <div class="ml-3">
-              <p class="text-sm font-medium text-gray-100">shadcn</p>
-              <p class="text-xs text-gray-400">m@example.com</p>
             </div>
+
+            <!-- Submenu -->
+            <transition name="submenu">
+              <div v-if="item.expanded && !isCollapsed" class="submenu">
+                <router-link 
+                  v-for="(child, childIndex) in item.children" 
+                  :key="childIndex"
+                  :to="child.path"
+                  class="submenu-item"
+                  :class="{ 'active': currentPath === child.path }"
+                >
+                  {{ child.name }}
+                </router-link>
+              </div>
+            </transition>
           </div>
-          <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-            <chevron-down-icon class="w-4 h-4" />
-          </button>
         </div>
       </div>
+    </div>
+
+    <!-- User profile -->
+    <div class="user-profile">
+      <div class="user-avatar">
+        <img :src="userAvatar" alt="User Avatar" />
+      </div>
+      <div class="user-info" v-show="!isCollapsed">
+        <div class="user-name">{{ userName }}</div>
+        <div class="user-email">{{ userEmail }}</div>
+      </div>
+      <button class="user-menu-button" v-show="!isCollapsed">
+        <chevron-down-icon />
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import { 
-    FileText as FileTextIcon,
-    ChevronDown as ChevronDownIcon,
-    ChevronRight as ChevronRightIcon,
-    Layout as LayoutIcon,
-    Box as BoxIcon,
-    FileText as DocumentationIcon,
-    Settings as SettingsIcon
-  } from 'lucide-vue-next';
+import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronDown as ChevronDownIcon,
+  Search as SearchIcon,
+  Layout as LayoutIcon,
+  Home as HomeIcon,
+  Bookmark as BookmarkIcon,
+  BarChart2 as ChartIcon,
+  Users as UsersIcon,
+  MessageSquare as MessageIcon,
+  Calendar as CalendarIcon,
+  Settings as SettingsIcon,
+  Folder as FolderIcon,
+} from 'lucide-vue-next';
 
-  // State
-  const isDarkMode = ref(true);
-  const activeSubmenu = ref('playground'); // Set to 'playground' to show it expanded by default
+// Props with defaults
+const props = defineProps({
+  defaultCollapsed: {
+    type: Boolean,
+    default: false
+  },
+  userAvatar: {
+    type: String,
+    default: 'https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png'
+  },
+  userName: {
+    type: String,
+    default: 'Amy Elsner'
+  },
+  userEmail: {
+    type: String,
+    default: 'amy@example.com'
+  },
+  logoText: {
+    type: String,
+    default: 'Your Logo'
+  }
+});
 
-  // Menu items
-  const playgroundItems = ['History', 'Starred', 'Settings'];
+// Emits
+const emit = defineEmits(['collapse-change']);
 
-  const menuItems = [
-    { 
-      name: 'Models', 
-      icon: BoxIcon, 
-      hasSubmenu: true,
-      submenu: ['Item 1', 'Item 2', 'Item 3']
-    },
-    { 
-      name: 'Documentation', 
-      icon: DocumentationIcon, 
-      hasSubmenu: false
-    },
-    { 
-      name: 'Settings', 
-      icon: SettingsIcon, 
-      hasSubmenu: true,
-      submenu: ['Account', 'Preferences']
-    }
-  ];
+// State
+const isCollapsed = ref(props.defaultCollapsed);
+const route = useRoute();
+const showLogoText = ref(!isCollapsed.value);
+const showSearch = ref(!isCollapsed.value);
+const showSectionTitle = ref(!isCollapsed.value);
+const showNavItemText = ref(!isCollapsed.value);
+const showBadge = ref(!isCollapsed.value);
+const showSubmenuArrow = ref(!isCollapsed.value);
+const showUserInfo = ref(!isCollapsed.value);
+const showUserMenuButton = ref(!isCollapsed.value);
 
-  // Toggle submenu
-  const toggleSubmenu = (menu) => {
-    if (activeSubmenu.value === menu) {
-      activeSubmenu.value = null;
-    } else {
-      activeSubmenu.value = menu;
-    }
-  };
+// Computed
+const currentPath = computed(() => route.path);
 
-  // Transition hooks
-  const beforeEnter = (el) => {
-    el.style.height = '0';
-  };
+// Navigation data
+const navigationSections = ref([
+  {
+    title: 'PRINCIPAIS',
+    items: [
+      { name: 'Dashboard', path: '/', icon: HomeIcon },
+      { name: 'Bookmarks', path: '/bookmarks', icon: BookmarkIcon },
+      { 
+        name: 'Reports', 
+        path: '/reports', 
+        icon: ChartIcon,
+        expanded: false,
+        children: [
+          { name: 'Revenue', path: '/reports/revenue' },
+          { name: 'Expenses', path: '/reports/expenses' }
+        ]
+      },
+      { name: 'Team', path: '/team', icon: UsersIcon },
+      { name: 'Messages', path: '/messages', icon: MessageIcon, badge: '3' },
+      { name: 'Calendar', path: '/calendar', icon: CalendarIcon },
+    ]
+  },
+  {
+    title: 'APPLICATION',
+    items: [
+      { name: 'Projects', path: '/projects', icon: FolderIcon },
+      { name: 'Performance', path: '/performance', icon: ChartIcon },
+      { name: 'Settings', path: '/settings', icon: SettingsIcon },
+    ]
+  }
+]);
 
-  const enter = (el, done) => {
-    el.offsetHeight; // trigger reflow
-    el.style.transition = 'height 0.3s ease-in-out';
-    el.style.height = `${el.scrollHeight}px`;
-    done();
-  };
+// Methods
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value;
+  showLogoText.value = !isCollapsed.value;
+  showSearch.value = !isCollapsed.value;
+  showSectionTitle.value = !isCollapsed.value;
+  showNavItemText.value = !isCollapsed.value;
+  showBadge.value = !isCollapsed.value;
+  showSubmenuArrow.value = !isCollapsed.value;
+  showUserInfo.value = !isCollapsed.value;
+  showUserMenuButton.value = !isCollapsed.value;
 
-  const leave = (el, done) => {
-    el.style.transition = 'height 0.3s ease-in-out';
-    el.style.height = '0';
-    done();
-  };
+  emit('collapse-change', isCollapsed.value);
+  
+  // Save state to localStorage
+  localStorage.setItem('sidebar-collapsed', isCollapsed.value);
+};
+
+const toggleSubmenu = (item) => {
+  if (isCollapsed.value) {
+    isCollapsed.value = false;
+    showLogoText.value = !isCollapsed.value;
+    showSearch.value = !isCollapsed.value;
+    showSectionTitle.value = !isCollapsed.value;
+    showNavItemText.value = !isCollapsed.value;
+    showBadge.value = !isCollapsed.value;
+    showSubmenuArrow.value = !isCollapsed.value;
+    showUserInfo.value = !isCollapsed.value;
+    showUserMenuButton.value = !isCollapsed.value;
+    item.expanded = true;
+  } else {
+    item.expanded = !item.expanded;
+  }
+};
+
+const isSubmenuActive = (item) => {
+  if (!item.children) return false;
+  return item.children.some(child => child.path === currentPath.value) || item.expanded;
+};
+
+// Load collapsed state from localStorage on mount
+onMounted(() => {
+  const savedState = localStorage.getItem('sidebar-collapsed');
+  if (savedState !== null) {
+    isCollapsed.value = savedState === 'true';
+    showLogoText.value = !isCollapsed.value;
+    showSearch.value = !isCollapsed.value;
+    showSectionTitle.value = !isCollapsed.value;
+    showNavItemText.value = !isCollapsed.value;
+    showBadge.value = !isCollapsed.value;
+    showSubmenuArrow.value = !isCollapsed.value;
+    showUserInfo.value = !isCollapsed.value;
+    showUserMenuButton.value = !isCollapsed.value;
+  }
+});
 </script>
 
 <style scoped>
-  /* Ensure the sidenav takes full height */
-  .sidenav {
-    height: 100vh;
-    position: relative;
-  }
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  height: 100%;
+  background-color: black;
+  color: #f3f4f6;
+  transition: width 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-  /* Add some custom scrollbar styling */
-  .sidenav div::-webkit-scrollbar {
-    width: 4px;
-  }
+.sidebar-container.collapsed {
+  width: 70px;
+}
 
-  .sidenav div::-webkit-scrollbar-track {
-    background: transparent;
-  }
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .sidenav div::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.3);
-    border-radius: 20px;
-  }
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  /* Ensure dark mode works properly */
-  .dark {
-    color-scheme: dark;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #4f46e5;
+  border-radius: 8px;
+}
 
-  /* Smooth transition for the submenu */
-  .submenu-transition-enter-active, 
-  .submenu-transition-leave-active {
-    transition: height 0.3s ease-in-out;
-  }
+.logo-icon {
+  width: 18px;
+  height: 18px;
+  color: white;
+}
 
-  .submenu-transition-enter, 
-  .submenu-transition-leave-to /* .submenu-transition-leave-active in <2.1.8 */ {
-    height: 0;
-  }
+.logo-text {
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+}
 
-  /* Styling for the progress bar */
-  .submenu-progress-bar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 4px;
-    background-color: #4B5563;
-    border-radius: 2px;
-    z-index: -1;
-  }
+.toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 
-  .progress-line {
-    background-color: #9CA3AF;
-    width: 100%;
+.toggle-button:hover {
+  color: #f3f4f6;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.search-container {
+  padding: 16px;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.search-icon {
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+  margin-right: 8px;
+}
+
+.search-input input {
+  background: transparent;
+  border: none;
+  color: #f3f4f6;
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+}
+
+.search-input input::placeholder {
+  color: #9ca3af;
+}
+
+.nav-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+.nav-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.nav-item-wrapper {
+  position: relative;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  color: #d1d5db;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 6px;
+  margin: 0 8px;
+  position: relative;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f3f4f6;
+}
+
+.nav-item.active {
+  background-color: rgba(79, 70, 229, 0.2);
+  color: #f3f4f6;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  margin-left: 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  background-color: #4f46e5;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: auto;
+  padding: 0 6px;
+}
+
+.submenu-arrow {
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.submenu {
+  padding-left: 40px;
+  overflow: hidden;
+}
+
+.submenu-item {
+  display: block;
+  padding: 8px 16px;
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.submenu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f3f4f6;
+}
+
+.submenu-item.active {
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.submenu-enter-active,
+.submenu-leave-active {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 200px;
+  opacity: 1;
+}
+
+.submenu-enter-from,
+.submenu-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info {
+  margin-left: 12px;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.user-menu-button:hover {
+  color: #f3f4f6;
+}
+
+/* Custom scrollbar */
+.sidebar-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar-container {
+    position: fixed;
+    z-index: 50;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   }
+}
 </style>
