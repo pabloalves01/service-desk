@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-zinc-950 relative overflow-hidden">
+  <div class="min-h-screen flex items-center justify-center bg-black/75 relative overflow-hidden">
     <!-- Background canvas for lines following mouse -->
     <canvas ref="canvas" class="absolute inset-0 w-full h-full"></canvas>
     
     <!-- Login container -->
-    <div class="w-full max-w-md px-6 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl z-10 relative">
+    <div class="w-full max-w-md px-6 py-8 bg-black/10 border border-zinc-800 backdrop-blur-md rounded-lg shadow-xl z-10 relative">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">Service Desk</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">Imobiliária</h1>
         <p class="text-gray-300">Entre para acessar o sistema</p>
       </div>
       
@@ -18,22 +18,22 @@
             id="email" 
             type="email" 
             required 
-            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-            placeholder="seu@email.com"
+            class="w-full px-4 py-2 bg-black/50 border border-zinc-800 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+            placeholder="email@email.com"
           />
         </div>
         
         <div>
           <div class="flex items-center justify-between mb-1">
             <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
-            <a href="#" class="text-sm text-purple-400 hover:text-purple-300">Esqueceu a senha?</a>
+            <a href="#" class="text-sm text-gray-400 hover:text-white">Esqueceu a senha?</a>
           </div>
           <input 
             v-model="password" 
             id="password" 
             type="password" 
             required 
-            class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+            class="w-full px-4 py-2 bg-black/50 border border-zinc-800 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
             placeholder="••••••••"
           />
         </div>
@@ -50,16 +50,16 @@
         <button 
           type="submit" 
           @click="login"
-          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black/50 border-zinc-800 hover:bg-[#274690] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
         >
           Entrar
         </button>
       </form>
       
       <div class="mt-6 text-center">
-        <p class="text-gray-400">
+        <p class="text-gray-400 text-sm">
           Não tem uma conta? 
-          <router-link to="/register" class="text-purple-400 hover:text-purple-300 font-medium">
+          <router-link to="/register" class="text-gray-400 hover:text-white font-medium">
             Registre-se
           </router-link>
         </p>
@@ -104,7 +104,7 @@ onMounted(() => {
   let mouseX = width / 2;
   let mouseY = height / 2;
   let particles = [];
-  const particleCount = 250;
+  const particleCount = 75;
   
   // Set canvas size
   canvas.value.width = width;
