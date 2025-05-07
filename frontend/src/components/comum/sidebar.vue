@@ -17,7 +17,7 @@
     <div class="search-container" v-show="!isCollapsed">
       <div class="search-input">
         <search-icon class="search-icon" />
-        <input type="text" placeholder="Search..." />
+        <input type="text" placeholder="Buscar..." />
       </div>
     </div>
 
@@ -120,15 +120,15 @@ const props = defineProps({
   },
   userName: {
     type: String,
-    default: 'Amy Elsner'
+    default: 'Desenvolvedor'
   },
   userEmail: {
     type: String,
-    default: 'amy@example.com'
+    default: 'admin@admin.com'
   },
   logoText: {
     type: String,
-    default: 'Your Logo'
+    default: 'Sua Logo'
   }
 });
 
@@ -136,6 +136,7 @@ const props = defineProps({
 const emit = defineEmits(['collapse-change']);
 
 // State
+
 const isCollapsed = ref(props.defaultCollapsed);
 const route = useRoute();
 const showLogoText = ref(!isCollapsed.value);
@@ -146,7 +147,7 @@ const showBadge = ref(!isCollapsed.value);
 const showSubmenuArrow = ref(!isCollapsed.value);
 const showUserInfo = ref(!isCollapsed.value);
 const showUserMenuButton = ref(!isCollapsed.value);
-
+  
 // Computed
 const currentPath = computed(() => route.path);
 
@@ -156,10 +157,10 @@ const navigationSections = ref([
     title: 'PRINCIPAIS',
     items: [
       { name: 'Dashboard', path: '/', icon: HomeIcon },
-      { name: 'Bookmarks', path: '/bookmarks', icon: BookmarkIcon },
+      { name: 'Imóveis', path: '/imoveis', icon: BookmarkIcon },
       { 
-        name: 'Reports', 
-        path: '/reports', 
+        name: 'Relatórios', 
+        path: '/relatorios', 
         icon: ChartIcon,
         expanded: false,
         children: [
@@ -167,17 +168,17 @@ const navigationSections = ref([
           { name: 'Expenses', path: '/reports/expenses' }
         ]
       },
-      { name: 'Team', path: '/team', icon: UsersIcon },
-      { name: 'Messages', path: '/messages', icon: MessageIcon, badge: '3' },
-      { name: 'Calendar', path: '/calendar', icon: CalendarIcon },
+      { name: 'Equipe', path: '/team', icon: UsersIcon },
+      { name: 'Mensagens', path: '/messages', icon: MessageIcon, badge: '3' },
+      { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
     ]
   },
   {
-    title: 'APPLICATION',
+    title: 'APLICAÇÃO',
     items: [
       { name: 'Projects', path: '/projects', icon: FolderIcon },
       { name: 'Performance', path: '/performance', icon: ChartIcon },
-      { name: 'Settings', path: '/settings', icon: SettingsIcon },
+      { name: 'Configurações', path: '/configuracoes', icon: SettingsIcon },
     ]
   }
 ]);

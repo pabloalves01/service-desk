@@ -16,8 +16,24 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Teste',
-    component: () => import('../views/Teste.vue'),
+    name: 'Dashboard',
+    component: () => import('../views/dashboard/dashboard.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/imoveis',
+    name: 'Imóveis',
+    component: () => import('../views/imoveis/gerenciar-imoveis.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/configuracoes',
+    name: 'Configurações',
+    component: () => import('../views/configuracoes/gerenciar-configuracoes.vue'),
     meta: {
       requiresAuth: true,
     },
