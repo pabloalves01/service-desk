@@ -6,7 +6,7 @@
     <!-- Login container -->
     <div class="w-full max-w-md px-6 py-8 bg-black/10 border border-zinc-800 backdrop-blur-md rounded-lg shadow-xl z-10 relative">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">Imobiliária</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">Loopn</h1>
         <p class="text-gray-300">Entre para acessar o sistema</p>
       </div>
       
