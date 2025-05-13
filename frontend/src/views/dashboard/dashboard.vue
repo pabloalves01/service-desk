@@ -1,6 +1,5 @@
 <template>
     <div class="p-14 flex flex-col gap-8">
-        <!-- Cabeçalho -->
         <div class="flex justify-between items-center">
             <div class="flex flex-col gap-1.5">
                 <h1 class="font-semibold text-2xl text-gray-200">Painel de Eventos</h1>
@@ -12,19 +11,24 @@
                 </template>
             </Button>
         </div>
-
-        <!-- Lista de Eventos -->
+        <div v-if="isLoadedEvents" class="flex gap-4">
+            <Skeleton width="25%" height="20rem"></Skeleton>
+            <Skeleton width="25%" height="20rem"></Skeleton>
+            <Skeleton width="25%" height="20rem"></Skeleton>
+            <Skeleton width="25%" height="20rem"></Skeleton>
+        </div>
         <div class="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-6">
             <div v-for="(event, index) in events" :key="index"
                 class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300">
                 <div alt="Evento" class="w-full bg-zinc-900 h-32 object-cover rounded-lg"></div>
-                <h2 class="text-lg font-semibold text-gray-200">{{ event.nome }}</h2>
-                <p class="text-zinc-500">{{ event.data }}</p>
-                <p class="text-zinc-500">{{ event.local }}</p>
-                <!-- <p class="text-zinc-400">{{ event.description }}</p> -->
+                <div class="flex justify-between">
+                    <h2 class="text-md font-semibold text-gray-200">{{ event.nome }}</h2>
+                    <h2 class="text-md text-zinc-700">#{{ event.codigo }}</h2>
+                </div>
+                <p class="text-sm text-zinc-500">{{ event.data }}</p>
+                <p class="text-sm text-zinc-500">{{ event.local }}</p>
             </div>
         </div>
-
     </div>
     <Dialog v-model:visible="visible" header="Cadastrar Novo Evento" :style="{ width: '30rem' }">
         <span class="text-surface-500 dark:text-surface-400 block mb-8">Preencha as informações.</span>
@@ -41,6 +45,17 @@
                 <label for="email" class="font-semibold">Data e Horário</label>
                 <DatePicker id="datepicker-24h" v-model="evento.data" showTime hourFormat="24" fluid />
             </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-semibold">Imagem do Evento</label>
+                <Button label="Selecionar Imagem" @click="selectImage">
+                    <template #icon>
+                        <Image />
+                    </template>
+                </Button>
+                <input type="file" ref="imageInput" class="hidden" accept="image/*" @change="onFileChange" />
+                <span v-if="evento.imagem" class="text-zinc-500 mt-2">{{ evento.imagem.name }}</span>
+            </div>
+
             <div class="flex justify-end gap-2">
                 <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
                 <Button type="button" label="Save" @click="save"></Button>
@@ -53,17 +68,20 @@
 import Button from '@/components/comum/buttons/button.vue';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import Skeleton from 'primevue/skeleton';
 import DatePicker from 'primevue/datepicker';
-import { Plus } from 'lucide-vue-next';
+import { Image, Plus } from 'lucide-vue-next';
 import axiosInstance from '../../axios';
 
 export default {
     components: {
         Button,
         Plus,
+        Image,
         Dialog,
         InputText,
         DatePicker,
+        Skeleton,
     },
     data() {
         return {
@@ -72,8 +90,10 @@ export default {
                 local: "",
                 data: "",
                 descricao: "",
+                imagem: null,
             },
             visible: false,
+            isLoadedEvents: true,
             events: [],
         };
     },
@@ -84,12 +104,23 @@ export default {
         openDialog() {
             this.visible = true;
         },
+        onFileChange(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.evento.imagem = file;
+            }
+        },
+
+        selectImage() {
+            this.$refs.imageInput.click();
+        },
         async save() {
             try {
                 const response = await axiosInstance.post('/events', {
                     nome: this.evento.nome,
                     local: this.evento.local,
                     data_evento: this.evento.data,
+                    imagem: this.evento.imagem,
                 });
                 this.getEventos();
                 this.visible = false;
@@ -103,8 +134,10 @@ export default {
             try {
                 const response = await axiosInstance.get('/events');
                 this.events = response.data.data;
+                this.isLoadedEvents = false;
                 console.log("Eventos obtidos com sucesso:", this.events);
             } catch (error) {
+                this.isLoadedEvents = false;
                 console.error("Erro ao obter eventos:", error);
             }
         },
