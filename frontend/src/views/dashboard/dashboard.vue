@@ -14,16 +14,17 @@
         </div>
 
         <!-- Lista de Eventos -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-6">
             <div v-for="(event, index) in events" :key="index"
-                class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105  transition-transform duration-300">
+                class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300">
                 <div alt="Evento" class="w-full bg-zinc-900 h-32 object-cover rounded-lg"></div>
-                <h2 class="text-lg font-semibold text-gray-200">{{ event.name }}</h2>
-                <p class="text-zinc-500">{{ event.time }}</p>
-                <p class="text-zinc-500">{{ event.location }}</p>
-                <p class="text-zinc-400">{{ event.description }}</p>
+                <h2 class="text-lg font-semibold text-gray-200">{{ event.nome }}</h2>
+                <p class="text-zinc-500">{{ event.data }}</p>
+                <p class="text-zinc-500">{{ event.local }}</p>
+                <!-- <p class="text-zinc-400">{{ event.description }}</p> -->
             </div>
         </div>
+
     </div>
     <Dialog v-model:visible="visible" header="Cadastrar Novo Evento" :style="{ width: '30rem' }">
         <span class="text-surface-500 dark:text-surface-400 block mb-8">Preencha as informações.</span>
@@ -35,6 +36,10 @@
             <div class="flex flex-col gap-2">
                 <label for="email" class="font-semibold">Local</label>
                 <InputText v-model="evento.local" id="email" class="flex-auto" autocomplete="off" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="email" class="font-semibold">Data e Horário</label>
+                <DatePicker id="datepicker-24h" v-model="evento.data" showTime hourFormat="24" fluid />
             </div>
             <div class="flex justify-end gap-2">
                 <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
@@ -48,6 +53,7 @@
 import Button from '@/components/comum/buttons/button.vue';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import DatePicker from 'primevue/datepicker';
 import { Plus } from 'lucide-vue-next';
 import axiosInstance from '../../axios';
 
@@ -57,54 +63,22 @@ export default {
         Plus,
         Dialog,
         InputText,
-
+        DatePicker,
     },
     data() {
         return {
             evento: {
                 nome: "",
                 local: "",
+                data: "",
                 descricao: "",
             },
             visible: false,
-            events: [
-                {
-                    name: "Workshop de Vue.js",
-                    time: "15:00 - 17:00",
-                    location: "Auditório A",
-                    description: "Aprenda os conceitos básicos e avançados do Vue.js.",
-                    image: "https://via.placeholder.com/150x150.png?text=Evento+1",
-                },
-                {
-                    name: "Reunião de Planejamento",
-                    time: "10:00 - 11:30",
-                    location: "Sala de Reunião 3",
-                    description: "Discussão sobre o plano estratégico do próximo trimestre.",
-                    image: "https://via.placeholder.com/150x150.png?text=Evento+2",
-                },
-                {
-                    name: "Lançamento de Produto",
-                    time: "18:00 - 20:00",
-                    location: "Salão Principal",
-                    description: "Apresentação do novo produto com coquetel para os convidados.",
-                    image: "https://via.placeholder.com/150x150.png?text=Evento+3",
-                },
-                {
-                    name: "Treinamento de Vendas",
-                    time: "09:00 - 12:00",
-                    location: "Sala de Treinamento 2",
-                    description: "Capacitação para a equipe de vendas sobre técnicas de negociação.",
-                    image: "https://via.placeholder.com/150x150.png?text=Evento+4",
-                },
-                {
-                    name: "Palestra Motivacional",
-                    time: "14:00 - 15:30",
-                    location: "Auditório B",
-                    description: "Inspire-se com histórias de sucesso de empreendedores locais.",
-                    image: "https://via.placeholder.com/150x150.png?text=Evento+5",
-                },
-            ],
+            events: [],
         };
+    },
+    created() {
+        this.getEventos();
     },
     methods: {
         openDialog() {
@@ -112,12 +86,33 @@ export default {
         },
         async save() {
             try {
-                const response = await axiosInstance.post('/events');
+                const response = await axiosInstance.post('/events', {
+                    nome: this.evento.nome,
+                    local: this.evento.local,
+                    data_evento: this.evento.data,
+                });
+                this.getEventos();
+                this.visible = false;
+                this.resetaValores();
                 console.log("Evento salvo com sucesso:", response.data);
             } catch (error) {
                 console.error("Erro ao salvar evento:", error);
             }
-        }
+        },
+        async getEventos() {
+            try {
+                const response = await axiosInstance.get('/events');
+                this.events = response.data.data;
+                console.log("Eventos obtidos com sucesso:", this.events);
+            } catch (error) {
+                console.error("Erro ao obter eventos:", error);
+            }
+        },
+        resetaValores() {
+            this.evento.nome = "";
+            this.evento.local = "";
+            this.evento.data = "";
+        },
     },
 };
 </script>
