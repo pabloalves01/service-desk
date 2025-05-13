@@ -16,8 +16,8 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Dashboard',
-    component: () => import('../views/dashboard/dashboard.vue'),
+    name: 'Eventos',
+    component: () => import('../views/eventos/gerenciar-eventos.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -46,7 +46,11 @@ const routes = [
       requiresAuth: true,
     },
   },
- 
+  {
+    path: '/eventos/visualizar/:codigo',
+    name: 'visualizar-evento',
+    component: () => import('../views/eventos/visualizar-evento.vue'),
+  }
 ]
 
 const router = createRouter({

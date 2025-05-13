@@ -1,26 +1,31 @@
 <template>
     <div class="p-14 flex flex-col gap-8">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col md:flex-row justify-between gap-4 md:gap-0 md:items-center">
             <div class="flex flex-col gap-1.5">
                 <h1 class="font-semibold text-2xl text-gray-200">Painel de Eventos</h1>
                 <span class="text-zinc-500">Gerencie seus eventos cadastrados.</span>
             </div>
-            <Button label="Novo Evento" @click="visible = true">
-                <template #icon>
-                    <Plus />
-                </template>
-            </Button>
+            <div class="flex gap-4">
+                <Button class="bg-transparent border border-zinc-700" label="Novo Evento" @click="visible = true">
+                    <template #icon>
+                        <Plus size="20px" />
+                    </template>
+                </Button>
+                <Button class="bg-transparent border border-zinc-700" label="Filtrar" @click="openFilterModal">
+                    <template #icon>
+                        <ListFilter size="20px" />
+                    </template>
+                </Button>
+            </div>
         </div>
-        <div v-if="isLoadedEvents" class="flex gap-4">
-            <Skeleton width="25%" height="20rem"></Skeleton>
-            <Skeleton width="25%" height="20rem"></Skeleton>
-            <Skeleton width="25%" height="20rem"></Skeleton>
-            <Skeleton width="25%" height="20rem"></Skeleton>
+        <div v-if="isLoadedEvents" class="grid grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] gap-4">
+            <Skeleton v-for="i in 5" :key="i" class="h-40 sm:h-48 lg:h-56 w-full" height="20rem"></Skeleton>
         </div>
         <div class="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-6">
             <div v-for="(event, index) in events" :key="index"
-                class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div alt="Evento" class="w-full bg-zinc-900 h-32 object-cover rounded-lg"></div>
+                class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300"
+                @click="visualizarEvento(event.codigo)">
+                <div alt="Evento" class="w-full bg-zinc-900 h-32 sm:h-40 lg:h-48 object-cover rounded-lg"></div>
                 <div class="flex justify-between">
                     <h2 class="text-md font-semibold text-gray-200">{{ event.nome }}</h2>
                     <h2 class="text-md text-zinc-700">#{{ event.codigo }}</h2>
@@ -28,6 +33,12 @@
                 <p class="text-sm text-zinc-500">{{ event.data }}</p>
                 <p class="text-sm text-zinc-500">{{ event.local }}</p>
             </div>
+        </div>
+        <div class="flex flex-col items-center justify-center h-64 gap-4 text-zinc-500"
+            v-if="events.length < 1 && !isLoadedEvents">
+            <Image class="w-16 h-16" />
+            <h2 class="text-xl font-semibold">Nenhum evento encontrado</h2>
+            <p class="text-sm">Clique no botão <strong>Novo Evento</strong> acima para cadastrar um novo evento.</p>
         </div>
     </div>
     <Dialog v-model:visible="visible" header="Cadastrar Novo Evento" :style="{ width: '30rem' }">
@@ -70,7 +81,7 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Skeleton from 'primevue/skeleton';
 import DatePicker from 'primevue/datepicker';
-import { Image, Plus } from 'lucide-vue-next';
+import { Image, Plus, ListFilter } from 'lucide-vue-next';
 import axiosInstance from '../../axios';
 
 export default {
@@ -78,6 +89,7 @@ export default {
         Button,
         Plus,
         Image,
+        ListFilter,
         Dialog,
         InputText,
         DatePicker,
@@ -93,6 +105,7 @@ export default {
                 imagem: null,
             },
             visible: false,
+            modalFilterIsVisible: false,
             isLoadedEvents: true,
             events: [],
         };
@@ -103,6 +116,9 @@ export default {
     methods: {
         openDialog() {
             this.visible = true;
+        },
+        openFilterModal() {
+            this.modalFilterIsVisible = true;
         },
         onFileChange(e) {
             const file = e.target.files[0];
@@ -140,6 +156,9 @@ export default {
                 this.isLoadedEvents = false;
                 console.error("Erro ao obter eventos:", error);
             }
+        },
+        visualizarEvento(codigo) {
+            this.$router.push({ name: 'visualizar-evento', params: { codigo } });
         },
         resetaValores() {
             this.evento.nome = "";
