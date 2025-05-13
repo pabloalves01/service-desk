@@ -38,7 +38,7 @@
             </div>
             <div class="flex justify-end gap-2">
                 <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-                <Button type="button" label="Save" @click="visible = false"></Button>
+                <Button type="button" label="Save" @click="save"></Button>
             </div>
         </div>
     </Dialog>
@@ -49,7 +49,7 @@ import Button from '@/components/comum/buttons/button.vue';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import { Plus } from 'lucide-vue-next';
-import axiosInstance from '@/axios';
+import axiosInstance from '../../axios';
 
 export default {
     components: {
@@ -112,11 +112,8 @@ export default {
         },
         async save() {
             try {
-                const response = await axiosInstance.post('/events', {
-                    name: this.nome,
-                    localizacao: this.localizacao,
-                    descricao: this.descricao,
-                });
+                const response = await axiosInstance.post('/events');
+                console.log("Evento salvo com sucesso:", response.data);
             } catch (error) {
                 console.error("Erro ao salvar evento:", error);
             }
