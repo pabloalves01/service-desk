@@ -47,9 +47,12 @@ const routes = [
     },
   },
   {
-    path: '/eventos/visualizar/:codigo',
+    path: '/eventos/visualizar/:id',
     name: 'visualizar-evento',
     component: () => import('../views/eventos/visualizar-evento.vue'),
+     meta: {
+      requiresAuth: true,
+    },
   }
 ]
 

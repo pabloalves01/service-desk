@@ -1,11 +1,7 @@
 <template>
     <div class="p-14 flex flex-col gap-8">
-        <div class="flex flex-col md:flex-row justify-between gap-4 md:gap-0 md:items-center">
-            <div class="flex flex-col gap-1.5">
-                <h1 class="font-semibold text-2xl text-gray-200">Painel de Eventos</h1>
-                <span class="text-zinc-500">Gerencie seus eventos cadastrados.</span>
-            </div>
-            <div class="flex gap-4">
+        <Breadcrumb :items="breadcrumbItems">
+            <template #buttons>
                 <Button class="bg-transparent border border-zinc-700" label="Novo Evento" @click="visible = true">
                     <template #icon>
                         <Plus size="20px" />
@@ -16,7 +12,25 @@
                         <ListFilter size="20px" />
                     </template>
                 </Button>
+            </template>
+        </Breadcrumb>
+        <div class="flex flex-col md:flex-row justify-between gap-4 md:gap-0 md:items-center">
+            <div class="flex flex-col gap-1.5">
+                <h1 class="font-semibold text-2xl text-gray-200">Painel de Eventos</h1>
+                <span class="text-zinc-500">Gerencie seus eventos cadastrados.</span>
             </div>
+            <!-- <div class="flex gap-4">
+                <Button class="bg-transparent border border-zinc-700" label="Novo Evento" @click="visible = true">
+                    <template #icon>
+                        <Plus size="20px" />
+                    </template>
+                </Button>
+                <Button class="bg-transparent border border-zinc-700" label="Filtrar" @click="openFilterModal">
+                    <template #icon>
+                        <ListFilter size="20px" />
+                    </template>
+                </Button>
+            </div> -->
         </div>
         <div v-if="isLoadedEvents" class="grid grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] gap-4">
             <Skeleton v-for="i in 5" :key="i" class="h-40 sm:h-48 lg:h-56 w-full" height="20rem"></Skeleton>
@@ -24,7 +38,7 @@
         <div class="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-6">
             <div v-for="(event, index) in events" :key="index"
                 class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300"
-                @click="visualizarEvento(event.codigo)">
+                @click="visualizarEvento(event.id)">
                 <div class="w-full bg-zinc-900 h-32 sm:h-40 lg:h-48 object-cover rounded-lg overflow-hidden">
                     <img v-if="event.image_path" :src="`http://127.0.0.1:8000/storage/${event.image_path}`"
                         alt="Imagem do Evento" class="w-full sm:h-32 md:h-40 lg:h-48 object-cover" />
@@ -105,6 +119,10 @@ export default {
     },
     data() {
         return {
+            breadcrumbItems: [
+                { label: 'Eventos', route: '/eventos', icon: 'pi pi-calendar' },
+                { label: 'Gerenciar Eventos', route: '/eventos/gerenciar', icon: 'pi pi-list-check' },
+            ],
             evento: {
                 nome: "",
                 local: "",
@@ -174,8 +192,8 @@ export default {
                 console.error("Erro ao obter eventos:", error);
             }
         },
-        visualizarEvento(codigo) {
-            this.$router.push({ name: 'visualizar-evento', params: { codigo } });
+        visualizarEvento(id) {
+            this.$router.push({ name: 'visualizar-evento', params: { id } });
         },
         resetaValores() {
             this.evento.nome = "";

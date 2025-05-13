@@ -11,7 +11,7 @@ class EventosController extends Controller
 {
     public function index()
     {
-        $eventos = Eventos::get(['codigo', 'nome', 'local', 'data', 'image_path', 'status']);
+        $eventos = Eventos::get();
         foreach ($eventos as $evento) {
             $evento->data = Carbon::parse($evento->data)->format('d/m/Y H:i:s');
         }
@@ -44,7 +44,19 @@ class EventosController extends Controller
             'image_path' => $imagemPath,
         ]);
 
-        return response()->json(['data' => $evento], 201);
+        return response()->json($evento, 201);
+    }
+
+    public function show($id)
+    {
+        $evento = Eventos::find($id);
+        if (!$evento) {
+            return response()->json(['message' => 'Evento não encontrado'], 404);
+        }
+
+        $evento->data = Carbon::parse($evento->data)->format('d/m/Y H:i:s');
+
+        return response()->json(['data' => $evento], 200);
     }
 
 
