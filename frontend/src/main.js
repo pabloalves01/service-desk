@@ -8,7 +8,7 @@ import Aura from '@primeuix/themes/aura'
 const app = createApp(App)
 
 
-app.use(router) // Use o Vue Router
+app.use(router)
 app.use(PrimeVue, {
     theme: {
         preset: Aura
