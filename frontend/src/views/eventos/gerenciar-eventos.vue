@@ -21,11 +21,18 @@
         <div v-if="isLoadedEvents" class="grid grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] gap-4">
             <Skeleton v-for="i in 5" :key="i" class="h-40 sm:h-48 lg:h-56 w-full" height="20rem"></Skeleton>
         </div>
-        <div class="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-6">
+        <div class="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-6">
             <div v-for="(event, index) in events" :key="index"
                 class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300"
                 @click="visualizarEvento(event.codigo)">
-                <div alt="Evento" class="w-full bg-zinc-900 h-32 sm:h-40 lg:h-48 object-cover rounded-lg"></div>
+                <div class="w-full bg-zinc-900 h-32 sm:h-40 lg:h-48 object-cover rounded-lg overflow-hidden">
+                    <img v-if="event.image_path" :src="`http://127.0.0.1:8000/storage/${event.image_path}`"
+                        alt="Imagem do Evento" class="w-full sm:h-32 md:h-40 lg:h-48 object-cover" />
+                    <div v-else class="w-full h-full flex justify-center items-center text-white">
+                        <span class="font-bold text-lg">Imagem não disponível</span>
+                    </div>
+                </div>
+
                 <div class="flex justify-between">
                     <h2 class="text-md font-semibold text-gray-200">{{ event.nome }}</h2>
                     <h2 class="text-md text-zinc-700">#{{ event.codigo }}</h2>
@@ -33,6 +40,7 @@
                 <p class="text-sm text-zinc-500">{{ event.data }}</p>
                 <p class="text-sm text-zinc-500">{{ event.local }}</p>
             </div>
+
         </div>
         <div class="flex flex-col items-center justify-center h-64 gap-4 text-zinc-500"
             v-if="events.length < 1 && !isLoadedEvents">
@@ -57,8 +65,9 @@
                 <DatePicker id="datepicker-24h" v-model="evento.data" showTime hourFormat="24" fluid />
             </div>
             <div class="flex flex-col gap-2">
-                <label class="font-semibold">Imagem do Evento</label>
-                <Button label="Selecionar Imagem" @click="selectImage">
+                <label class="font-semibold">Imagem de Capa</label>
+                <Button class="border border-zinc-700 py-10 justify-center" label="Selecionar Imagem"
+                    @click="selectImage" style="background-color: black;">
                     <template #icon>
                         <Image />
                     </template>
@@ -66,7 +75,6 @@
                 <input type="file" ref="imageInput" class="hidden" accept="image/*" @change="onFileChange" />
                 <span v-if="evento.imagem" class="text-zinc-500 mt-2">{{ evento.imagem.name }}</span>
             </div>
-
             <div class="flex justify-end gap-2">
                 <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
                 <Button type="button" label="Save" @click="save"></Button>
@@ -132,11 +140,19 @@ export default {
         },
         async save() {
             try {
-                const response = await axiosInstance.post('/events', {
-                    nome: this.evento.nome,
-                    local: this.evento.local,
-                    data_evento: this.evento.data,
-                    imagem: this.evento.imagem,
+                const formData = new FormData();
+                formData.append('nome', this.evento.nome);
+                formData.append('local', this.evento.local);
+                const dataFormatada = new Date(this.evento.data).toISOString().slice(0, 19).replace('T', ' ');
+                formData.append('data_evento', dataFormatada);
+                if (this.evento.imagem) {
+                    formData.append('imagem', this.evento.imagem);
+                }
+                // console.log([...formData.entries()]);
+                const response = await axiosInstance.post('/events', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 });
                 this.getEventos();
                 this.visible = false;
@@ -150,6 +166,7 @@ export default {
             try {
                 const response = await axiosInstance.get('/events');
                 this.events = response.data.data;
+                console.log(this.events);
                 this.isLoadedEvents = false;
                 console.log("Eventos obtidos com sucesso:", this.events);
             } catch (error) {

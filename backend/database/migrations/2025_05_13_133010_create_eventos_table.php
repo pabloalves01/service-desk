@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('nome');
             $table->string('local')->nullable();
             $table->datetime('data')->nullable( );
+            $table->string('image_path')->nullable();
             $table->enum('status', ['ativo', 'inativo'])->default('ativo');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

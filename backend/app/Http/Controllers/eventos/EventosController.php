@@ -11,7 +11,7 @@ class EventosController extends Controller
 {
     public function index()
     {
-        $eventos = Eventos::get(['codigo', 'nome', 'local', 'data', 'status']);
+        $eventos = Eventos::get(['codigo', 'nome', 'local', 'data', 'image_path', 'status']);
         foreach ($eventos as $evento) {
             $evento->data = Carbon::parse($evento->data)->format('d/m/Y H:i:s');
         }
@@ -23,25 +23,30 @@ class EventosController extends Controller
 
     public function store(Request $request)
     {
+        $imagemPath = null;
+        if ($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $codigo = $this->generateUniqueCode();
+            $filename = 'imagem-capa-' . $codigo . '.' . $file->getClientOriginalExtension();
+            $imagemPath = $file->storeAs('eventos', $filename, 'public');
+        }
+
         $nome = $request->nome;
         $local = $request->local;
         $data_evento = Carbon::parse($request->data_evento)->format('Y-m-d H:i:s');
-        $codigo = $this->generateUniqueCode();
 
-        Eventos::create([
+        $evento = Eventos::create([
             'codigo' => $codigo,
             'nome' => $nome,
             'local' => $local,
             'data' => $data_evento,
             'status' => 'ativo',
+            'image_path' => $imagemPath,
         ]);
-        return response()->json([
-            'message' => 'Evento criado com sucesso!',
-            'data' => [
-                'nome' => $nome,
-            ],
-        ], 201);
+
+        return response()->json(['data' => $evento], 201);
     }
+
 
     private function generateUniqueCode()
     {

@@ -15,10 +15,3 @@ app.use(PrimeVue, {
     }
 });
 app.mount('#app')
-
-
-// const app = createApp(App);
-// app.use(router);
-// app.mount('#app');
-
-// createApp(App).use(router).mount('#app')
