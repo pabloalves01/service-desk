@@ -165,10 +165,7 @@ export default {
       
       // Dados fixos para o layout
       aniversariantes: [
-        { dia: '01', nome: 'PABLO A. DA SILVA', departamento: 'MARKETING' },
-        { dia: '01', nome: 'PABLO A. DA SILVA', departamento: 'MARKETING' },
-        { dia: '01', nome: 'PABLO A. DA SILVA', departamento: 'MARKETING' },
-        { dia: '01', nome: 'PABLO A. DA SILVA', departamento: 'MARKETING' }
+       
       ],
       temperatura: 26,
       dia: '24',
@@ -195,6 +192,7 @@ export default {
   },
   created() {
     this.getEvento();
+    this.getAniversariantes();
   },
   mounted() {
     this.startSlideshow();
@@ -207,6 +205,17 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    async getAniversariantes() {
+        const mesAtual = new Date().getMonth() + 1;
+        try {
+            const response = await axiosInstance.get('/aniversariantes', {
+                params: { mes: mesAtual },
+            });
+            this.aniversariantes = response.data;
+        } catch (error) {
+          console.error("Erro ao buscar aniversariantes:", error);
+        }
+    },
     async getEvento() {
       try {
         const response = await axiosInstance.get(`/imagens/evento/${this.idEvento}`);

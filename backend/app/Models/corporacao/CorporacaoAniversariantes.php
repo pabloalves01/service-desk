@@ -16,4 +16,9 @@ class CorporacaoAniversariantes extends Model
         'mes',
     ];
     public $timestamps = true;
+
+    public function setor()
+    {
+        return $this->belongsTo(CorporacaoSetores::class, 'setor_id');
+    }
 }
