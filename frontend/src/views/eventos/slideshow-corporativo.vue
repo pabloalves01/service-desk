@@ -52,7 +52,7 @@
     <!-- Conteúdo principal -->
     <div class="flex-1 flex flex-col">
       <!-- Área do slideshow -->
-      <div class="flex-1 relative">
+      <div class="flex-1 relative bg-black">
         <!-- Título central -->
         <!-- <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
           <h1 class="text-6xl font-bold text-black">VIDEOS E IMAGENS</h1>
@@ -64,7 +64,7 @@
             :class="[
               'absolute top-0 left-0 w-full h-full transition-opacity duration-500',
               currentIndex === index ? 'opacity-100' : 'opacity-0',
-              'object-contain'
+              'object-cover'
             ]" alt="Imagem do evento" />
         </div>
 
@@ -110,10 +110,10 @@
 
         <!-- Botão Fullscreen e Contador de imagens -->
         <div v-if="fotos.length > 0"
-          class="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded flex gap-2">
+          class="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full flex gap-2">
           <button @click="toggleFullscreen"
-            class="bg-zinc-800 hover:bg-zinc-600 text-white p-1 rounded-full flex items-center justify-center p-2">
-            <Fullscreen class="text-zinc-500" size="24" />
+            class="text-white p-1 flex items-center justify-center p-2">
+            <Fullscreen class="text-zinc-500 hover:text-zinc-300" size="24" />
           </button>
         </div>
         <div v-if="fotos.length > 0" class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
@@ -278,6 +278,20 @@ export default {
   .w-64 {
     width: 100%;
     height: auto;
+  }
+}
+
+.flex-1.relative {
+  aspect-ratio: 16/9;
+  max-height: calc(100vh - 80px); /* Altura total menos a altura da barra de notícias */
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .flex-1.relative img {
+    width: 100%;
+    height: 100%;
+    object-position: center;
   }
 }
 </style>
