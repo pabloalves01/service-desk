@@ -7,11 +7,11 @@
         <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo" class="w-64 mb-4 py-4" />
         <div class="flex gap-2">
             <Cake />
-        <h2 class="font-bold text-lg mb-4">ANIVERSARIANTES</h2>
+        <h2 class="font-bold text-lg mb-4">Aniversáriantes</h2>
         </div>
         <div class="space-y-2">
-          <div v-for="(aniversariante, index) in aniversariantes" :key="index" class="flex items-center">
-            <span class="text-sm mr-2">{{ aniversariante.dia }}</span>
+          <div v-for="(aniversariante, index) in aniversariantes" :key="index" class="flex">
+            <span class="text-sm font-black mt-0.5 mr-2">{{ aniversariante.dia }}</span>
             <div>
               <div class="font-semibold">{{ aniversariante.nome }}</div>
               <div class="text-xs text-gray-500">{{ aniversariante.departamento }}</div>
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="border-t border-gray-200 my-4 mx-4"></div>
+      <div class="border-t border-white/20 my-4 mx-4"></div>
 
       <!-- Previsão do tempo -->
       <div class="p-4">
@@ -167,11 +167,8 @@ export default {
       aniversariantes: [
        
       ],
+      currentDate: new Date(),
       temperatura: 26,
-      dia: '24',
-      diaSemana: 'SEXTA',
-      mes: 'AGO',
-      hora: '16:30',
       
       // Notícias de exemplo
       noticias: [
@@ -195,16 +192,39 @@ export default {
     this.getAniversariantes();
   },
   mounted() {
+    this.updateTime();
+    this.intervalId = setInterval(this.updateTime, 1000);
+
     this.startSlideshow();
     this.startNoticiaRotation();
     window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
+    clearInterval(this.intervalId);
     this.stopSlideshow();
     this.stopNoticiaRotation();
     window.removeEventListener('resize', this.handleResize);
   },
+  computed: {
+     dia() {
+      return this.currentDate.getDate(); // Retorna o dia do mês
+    },
+    diaSemana() {
+      const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+      return diasDaSemana[this.currentDate.getDay()]; // Retorna o dia da semana
+    },
+    mes() {
+      const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+      return meses[this.currentDate.getMonth()]; // Retorna o mês abreviado
+    },
+    hora() {
+      return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+  },
   methods: {
+    updateTime() {
+      this.currentDate = new Date();
+    },
     async getAniversariantes() {
         const mesAtual = new Date().getMonth() + 1;
         try {
@@ -263,7 +283,6 @@ export default {
     handleResize() {
       // Método mantido do código original
     },
-    // Métodos para rotação de notícias
     startNoticiaRotation() {
       this.stopNoticiaRotation();
       this.noticiaTimer = setInterval(() => {
