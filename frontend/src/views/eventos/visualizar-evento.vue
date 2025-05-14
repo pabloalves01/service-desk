@@ -125,7 +125,7 @@
 
         <!-- Estado vazio -->
         <div v-else class="flex flex-col items-center justify-center py-12 text-zinc-500">
-          <!-- <ImageOff size="48px" class="mb-4 opacity-50" /> -->
+          <ImageOff size="48px" class="mb-4 opacity-50" />
           <p>Nenhuma foto encontrada para este filtro</p>
         </div>
       </div>
@@ -135,7 +135,7 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Plus, ListFilter, Camera, Check, X, Trash2 } from 'lucide-vue-next';
+import { Plus, ListFilter, Camera, Check, X, Trash2, ImageOff } from 'lucide-vue-next';
 export default {
   components: {
     Plus,
@@ -144,6 +144,7 @@ export default {
     Check,
     X,
     Trash2,
+    ImageOff
   },
   data() {
     return {
@@ -151,7 +152,7 @@ export default {
         fotos: []
       },
       breadcrumbItems: [
-        { label: 'Eventos', route: '/eventos', icon: 'pi pi-calendar' },
+        { label: 'Eventos', route: '/', icon: 'pi pi-calendar' },
         { label: 'Visualizar Evento', route: '/eventos/visualizar', icon: 'pi pi-eye' },
       ],
       currentFilter: 'todas',
@@ -242,7 +243,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* Estilos adicionais se necessário */
-</style>
