@@ -5,9 +5,10 @@
     
     <!-- Login container -->
     <div class="w-full max-w-md px-6 py-8 bg-black/10 border border-zinc-800 backdrop-blur-md rounded-lg shadow-xl z-10 relative">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">Loopn</h1>
-        <p class="text-gray-300">Entre para acessar o sistema</p>
+      <div class="flex flex-col items-center text-center mb-8">
+        <img v-if="$globals.logoCorporativa" :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo" class="w-[198px]" />
+        <h1 v-else class="text-3xl font-bold text-white mb-2">Sistema</h1>
+        <!-- <p class="text-gray-300">Entre para acessar o sistema</p> -->
       </div>
       
       <form @submit.prevent="login" class="space-y-6">
@@ -87,9 +88,7 @@ const login = async () => {
         email: email.value,
         password: password.value,
       });
-  
       localStorage.setItem('token', response.data.token);
-  
       router.push('/');
     } catch (err) {
       error.value = 'Credenciais inválidas';

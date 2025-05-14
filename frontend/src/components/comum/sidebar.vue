@@ -106,6 +106,9 @@ import {
   Calendar as CalendarIcon,
   Settings as SettingsIcon,
   Folder as FolderIcon,
+  Calendar,
+  Cake,
+  Users,
 } from 'lucide-vue-next';
 
 // Props with defaults
@@ -156,7 +159,7 @@ const navigationSections = ref([
   {
     title: 'PRINCIPAIS',
     items: [
-      { name: 'Dashboard', path: '/', icon: HomeIcon },
+      { name: 'Eventos', path: '/', icon: Calendar },
       { name: 'Imóveis', path: '/imoveis', icon: BookmarkIcon },
       { 
         name: 'Relatórios', 
@@ -170,6 +173,24 @@ const navigationSections = ref([
       },
       { name: 'Equipe', path: '/team', icon: UsersIcon },
       { name: 'Mensagens', path: '/messages', icon: MessageIcon, badge: '3' },
+      { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
+    ]
+  },
+   {
+    title: 'ADMINISTRATIVO',
+    items: [
+      { name: 'Aniversáriantes', path: '/gerenciar-aniversariantes', icon: Cake },
+      { name: 'Setores', path: '/gerenciar-setores', icon: Users },
+      // { 
+      //   name: 'Relatórios', 
+      //   path: '/relatorios', 
+      //   icon: ChartIcon,
+      //   expanded: false,
+      //   children: [
+      //     { name: 'Revenue', path: '/reports/revenue' },
+      //     { name: 'Expenses', path: '/reports/expenses' }
+      //   ]
+      // },
       { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
     ]
   },
