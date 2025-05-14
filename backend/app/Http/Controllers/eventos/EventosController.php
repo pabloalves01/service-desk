@@ -50,7 +50,7 @@ class EventosController extends Controller
 
     public function show($id)
     {
-        $evento = Eventos::find($id);
+        $evento = Eventos::with('fotos')->find($id);
         if (!$evento) {
             return response()->json(['message' => 'Evento não encontrado'], 404);
         }

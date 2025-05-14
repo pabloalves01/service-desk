@@ -13,4 +13,9 @@ class Eventos extends Model
     protected $fillable = ['codigo', 'nome', 'local', 'data', 'image_path', 'status'];
 
     public $timestamps = true;
+
+    public function fotos()
+    {
+        return $this->hasMany(EventosFotos::class, 'evento_id', 'id');
+    }
 }
