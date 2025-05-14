@@ -65,7 +65,12 @@
         ></button>
       </div>
 
-      <!-- Contador de imagens -->
+      <!-- Botão Fullscreen e Contador de imagens -->
+      <div v-if="fotos.length > 0" class="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded flex gap-2">
+        <button @click="toggleFullscreen" class="bg-zinc-800 hover:bg-zinc-600 text-white p-1 rounded">
+          <Fullscreen size="32" />
+        </button>
+      </div>
       <div v-if="fotos.length > 0" class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
         {{ currentIndex + 1 }} / {{ fotos.length }}
       </div>
@@ -75,8 +80,11 @@
 
 <script>
 import axiosInstance from '../../axios';
-
+import { Fullscreen } from 'lucide-vue-next';
 export default {
+    components: {
+      Fullscreen
+    },
   data() {
     return {
       fotos: [],
@@ -90,33 +98,26 @@ export default {
   },
   mounted() {
     this.startSlideshow();
-    // Adicionar listener para redimensionamento da janela
     window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
     this.stopSlideshow();
-    // Remover listener ao destruir o componente
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     async getEvento() {
       try {
         const response = await axiosInstance.get(`/imagens/evento/${this.idEvento}`);
-        this.fotos = response.data[0]; // Ajustado conforme sua correção
-        console.log("fotos", this.fotos);
-        
-        if (this.fotos && this.fotos.length > 0) {
-          console.log("Exemplo de caminho de imagem:", this.fotos[0].image_path);
-        }
+        this.fotos = response.data[0];
       } catch (error) {
         console.error("Erro ao buscar imagens do evento:", error);
       }
     },
     startSlideshow() {
-      this.stopSlideshow(); // Garantir que não haja timers duplicados
+      this.stopSlideshow();
       this.timer = setInterval(() => {
         this.nextSlide();
-      }, 5000); // Muda a cada 3 segundos
+      }, 5000);
     },
     stopSlideshow() {
       if (this.timer) {
@@ -125,40 +126,40 @@ export default {
       }
     },
     nextSlide() {
-      if (!this.fotos || this.fotos.length === 0) return;
       this.currentIndex = (this.currentIndex + 1) % this.fotos.length;
     },
     prevSlide() {
-      if (!this.fotos || this.fotos.length === 0) return;
       this.currentIndex = (this.currentIndex - 1 + this.fotos.length) % this.fotos.length;
     },
     setCurrentIndex(index) {
       this.currentIndex = index;
-      // Reinicia o timer quando o usuário clica em um ponto
       this.stopSlideshow();
       this.startSlideshow();
     },
-    handleResize() {
-      // Método para lidar com o redimensionamento da janela
-      // Pode ser usado para ajustes adicionais se necessário
+    toggleFullscreen() {
+      const elem = this.$el.querySelector('.relative');
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+          console.error(`Erro ao entrar em tela cheia: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-/* Estilos adicionais para garantir que o slideshow ocupe a tela toda em diferentes dispositivos */
 @media (max-width: 640px) {
-  /* Ajustes para telas pequenas */
   .relative {
-    height: calc(100vh - 80px) !important;
+    height: calc(100vh) !important;
   }
 }
 
 @media (min-width: 1024px) {
-  /* Ajustes para telas grandes */
   .relative {
-    height: calc(100vh - 120px) !important;
+    height: calc(100vh) !important;
   }
 }
 </style>
