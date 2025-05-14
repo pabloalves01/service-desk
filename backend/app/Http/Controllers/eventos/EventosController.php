@@ -4,6 +4,7 @@ namespace App\Http\Controllers\eventos;
 
 use App\Http\Controllers\Controller;
 use App\Models\eventos\Eventos;
+use App\Models\eventos\EventosFotos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -68,4 +69,39 @@ class EventosController extends Controller
 
         return $codigo;
     }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'fotos' => 'required|array',
+            'fotos.*' => 'file|mimes:jpg,jpeg,png,bmp,gif|max:10240',
+        ]);
+
+        $nome = $request->input('nome');
+        $codigoEvento = $request->input('codigo');
+        $fotos = $request->file('fotos');
+
+        $evento = Eventos::where('codigo', $codigoEvento)->first();
+
+        if ($fotos) {
+            $caminhos = [];
+            foreach ($fotos as $foto) {
+                $codigo = $this->generateUniqueCode();
+                $filename = 'foto-' . $codigo . '.' . $foto->getClientOriginalExtension();
+                $caminho = $foto->storeAs('eventos/fotos', $filename, 'public');
+                EventosFotos::create([
+                    'evento_id' => $evento->id,
+                    'nome_remetente' => $nome,
+                    'image_path' => $caminho,
+                ]);
+                $caminhos[] = $caminho;
+            }
+        }
+        return response()->json([
+            'nome' => $nome,
+            'fotos' => $caminhos ?? [],
+        ], 200);
+    }
+
+
 }

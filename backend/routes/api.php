@@ -15,6 +15,8 @@ Route::middleware('auth:api')->get('events', [EventosController::class, 'index']
 Route::middleware('auth:api')->post('events', [EventosController::class, 'store']);
 Route::middleware('auth:api')->get('event/{id}', [EventosController::class, 'show']);
 
+Route::post('/upload', [EventosController::class, 'uploadImage']);
+
 Route::get('/test', function () {
     return response()->json(['message' => 'API Laravel funcionando!']);
 });
