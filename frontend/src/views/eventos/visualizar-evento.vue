@@ -99,11 +99,12 @@
               </div>
             </div>
 
-            <div class="p-3 flex justify-between items-center">
+            <div class="p-3 flex gap-2 items-center">
+              <User size="14px"/>
               <span class="text-zinc-300 text-sm">{{ foto.nome_remetente || 'Não identificado' }}</span>
             </div>
 
-            <div class="px-3 pb-3 flex gap-2">
+            <div class="px-3 pb-3 flex gap-2" v-if="foto.status === 'pendente'">
               <button @click="aprovarFoto(foto.id)"
                 class="flex items-center justify-center gap-1 bg-green-600/20 hover:bg-green-600/30 text-green-500 px-3 py-1.5 rounded-md text-xs transition-colors">
                 <Check size="14px" />
@@ -135,7 +136,7 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Plus, ListFilter, Camera, Check, X, Trash2, ImageOff } from 'lucide-vue-next';
+import { Plus, ListFilter, Camera, Check, X, Trash2, ImageOff, User } from 'lucide-vue-next';
 export default {
   components: {
     Plus,
@@ -144,7 +145,8 @@ export default {
     Check,
     X,
     Trash2,
-    ImageOff
+    ImageOff,
+    User
   },
   data() {
     return {
