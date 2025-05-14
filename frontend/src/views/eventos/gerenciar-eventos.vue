@@ -40,7 +40,7 @@
                 class="border border-zinc-600 rounded-lg p-4 flex flex-col gap-4 cursor-pointer hover:scale-105 transition-transform duration-300"
                 @click="visualizarEvento(event.id)">
                 <div class="w-full bg-zinc-900 h-32 sm:h-40 lg:h-48 object-cover rounded-lg overflow-hidden">
-                    <img v-if="event.image_path" :src="`http://127.0.0.1:8000/storage/${event.image_path}`"
+                    <img v-if="event.image_path" :src="$globals.urlBase() + `/storage/${event.image_path}`"
                         alt="Imagem do Evento" class="w-full sm:h-32 md:h-40 lg:h-48 object-cover" />
                     <div v-else class="w-full h-full flex justify-center items-center text-white">
                         <span class="font-bold text-lg">Imagem não disponível</span>

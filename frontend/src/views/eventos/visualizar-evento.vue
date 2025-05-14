@@ -87,8 +87,7 @@
           <div v-for="(foto, index) in filteredFotos" :key="index"
             class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
             <div class="relative">
-              <img :src="`http://127.0.0.1:8000/storage/${foto.image_path}`" class="w-full h-48 object-cover"
-                alt="Foto do evento" />
+              <img :src="$globals.urlBase() + `/storage/${foto.image_path}`" class="w-full h-48 object-cover" />
               <div :class="[
                 'absolute top-2 right-2 px-2 py-1 text-xs rounded-md',
                 foto.status === 'pendente' ? 'bg-yellow-600' :
@@ -100,7 +99,7 @@
             </div>
 
             <div class="p-3 flex gap-2 items-center">
-              <User size="14px"/>
+              <User size="14px" />
               <span class="text-zinc-300 text-sm">{{ foto.nome_remetente || 'Não identificado' }}</span>
             </div>
 
@@ -115,7 +114,8 @@
                 <X size="14px" />
                 Rejeitar
               </button>
-              <button v-if="foto.status === 'pendente' || foto.status === 'aprovada'" @click="confirmarExclusao(foto.id)"
+              <button v-if="foto.status === 'pendente' || foto.status === 'aprovada'"
+                @click="confirmarExclusao(foto.id)"
                 class="flex items-center justify-center gap-1 bg-zinc-700/20 hover:bg-zinc-700/30 text-zinc-400 px-3 py-1.5 rounded-md text-xs transition-colors ml-auto">
                 <Trash2 size="14px" />
                 Excluir

@@ -6,8 +6,10 @@ import PrimeVue from 'primevue/config';
 import 'primeicons/primeicons.css';
 import Aura from '@primeuix/themes/aura'
 import Breadcrumb from './components/comum/breadcrumb/breacrumb.vue';
+import globals from './globals'
 const app = createApp(App)
 
+app.config.globalProperties.$globals = globals;
 
 app.use(router)
 app.component('Breadcrumb', Breadcrumb)
