@@ -64,6 +64,11 @@ const routes = [
     name: 'slideshow-evento',
     component: () => import('../views/eventos/slideshow-evento.vue'),
   },
+    {
+    path: '/slideshow/corporativo/:id',
+    name: 'slideshow-corporativo',
+    component: () => import('../views/eventos/slideshow-corporativo.vue'),
+  },
 ]
 
 const router = createRouter({

@@ -58,6 +58,12 @@
           </template>
           Acessar Slideshow
         </Button>
+        <Button class="bg-zinc-800 hover:bg-zinc-700 text-white" @click="redirectToCorporationSlideshow(evento.id)">
+          <template #icon>
+            <Slideshow size="18px" class="mr-2" />
+          </template>
+          Acessar Slideshow Corporativo
+        </Button>
       </div>
 
       <!-- Seção de Fotos -->
@@ -195,6 +201,9 @@ export default {
     },
     redirectToUploadPage(codigo) {
       this.$router.push({ name: 'upload-evento', params: { codigo } });
+    },
+    redirectToCorporationSlideshow(id) {
+      this.$router.push({ name: 'slideshow-corporativo', params: { id } });
     },
     statusLabel(status) {
       const labels = {
