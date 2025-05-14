@@ -157,7 +157,7 @@ export default {
         { label: 'Eventos', route: '/', icon: 'pi pi-calendar' },
         { label: 'Visualizar Evento', route: '/eventos/visualizar', icon: 'pi pi-eye' },
       ],
-      currentFilter: 'todas',
+      currentFilter: 'pendente',
       filters: [
         { label: 'Todas', value: 'todas' },
         { label: 'Pendentes', value: 'pendente' },
