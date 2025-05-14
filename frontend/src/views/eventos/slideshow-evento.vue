@@ -67,8 +67,8 @@
 
       <!-- Botão Fullscreen e Contador de imagens -->
       <div v-if="fotos.length > 0" class="absolute top-4 left-4 bg-black/50 text-white text-xs px-2 py-1 rounded flex gap-2">
-        <button @click="toggleFullscreen" class="bg-zinc-800 hover:bg-zinc-600 text-white p-1 rounded">
-          Fullscreen
+        <button @click="toggleFullscreen" class="bg-zinc-800 hover:bg-zinc-600 text-white p-1 rounded-full flex items-center justify-center p-2">
+          <Fullscreen class="text-zinc-500" size="24"/>
         </button>
       </div>
       <div v-if="fotos.length > 0" class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
@@ -80,8 +80,11 @@
 
 <script>
 import axiosInstance from '../../axios';
-
+import { Fullscreen } from 'lucide-vue-next';
 export default {
+  components: {
+    Fullscreen
+  },
   data() {
     return {
       fotos: [],

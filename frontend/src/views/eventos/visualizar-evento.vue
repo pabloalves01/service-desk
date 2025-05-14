@@ -104,18 +104,18 @@
               <span class="text-zinc-300 text-sm">{{ foto.nome_remetente || 'Não identificado' }}</span>
             </div>
 
-            <div class="px-3 pb-3 flex gap-2" v-if="foto.status === 'pendente'">
-              <button @click="aprovarFoto(foto.id)"
+            <div class="px-3 pb-3 flex gap-2">
+              <button v-if="foto.status === 'pendente'" @click="aprovarFoto(foto.id)"
                 class="flex items-center justify-center gap-1 bg-green-600/20 hover:bg-green-600/30 text-green-500 px-3 py-1.5 rounded-md text-xs transition-colors">
                 <Check size="14px" />
                 Aprovar
               </button>
-              <button @click="rejeitarFoto(foto.id)"
+              <button v-if="foto.status === 'pendente'" @click="rejeitarFoto(foto.id)"
                 class="flex items-center justify-center gap-1 bg-red-600/20 hover:bg-red-600/30 text-red-500 px-3 py-1.5 rounded-md text-xs transition-colors">
                 <X size="14px" />
                 Rejeitar
               </button>
-              <button @click="confirmarExclusao(foto.id)"
+              <button v-if="foto.status === 'pendente' || foto.status === 'aprovada'" @click="confirmarExclusao(foto.id)"
                 class="flex items-center justify-center gap-1 bg-zinc-700/20 hover:bg-zinc-700/30 text-zinc-400 px-3 py-1.5 rounded-md text-xs transition-colors ml-auto">
                 <Trash2 size="14px" />
                 Excluir

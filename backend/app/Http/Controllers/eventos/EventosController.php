@@ -155,13 +155,5 @@ class EventosController extends Controller
         return response()->json([
             $fotosEvento,
         ], 200);
-        // $evento = Eventos::with('fotos')->find($id);
-        // if (!$evento) {
-        //     return response()->json(['message' => 'Evento não encontrado'], 404);
-        // }
-
-        // $evento->data = Carbon::parse($evento->data)->format('d/m/Y H:i:s');
-
-        // return response()->json(['data' => $evento], 200);
     }
 }
