@@ -4,7 +4,11 @@
     <div class="w-64 bg-gradient-to-b from-[#0E396C] to-[#011E41] flex flex-col border-r border-white/20">
       <!-- Aniversariantes -->
       <div class="p-4">
+        <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo" class="w-64 mb-4 py-4" />
+        <div class="flex gap-2">
+            <Cake />
         <h2 class="font-bold text-lg mb-4">ANIVERSARIANTES</h2>
+        </div>
         <div class="space-y-2">
           <div v-for="(aniversariante, index) in aniversariantes" :key="index" class="flex items-center">
             <span class="text-sm mr-2">{{ aniversariante.dia }}</span>
@@ -143,11 +147,12 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen } from 'lucide-vue-next';
+import { Fullscreen, Cake } from 'lucide-vue-next';
 
 export default {
   components: {
-    Fullscreen
+    Fullscreen,
+    Cake
   },
   data() {
     return {
