@@ -146,7 +146,7 @@ class EventosController extends Controller
     {
         $evento = Eventos::find($id);
 
-        $fotosEvento = EventosFotos::where('evento_id', $evento->id)->get('image_path');
+        $fotosEvento = EventosFotos::where('evento_id', $evento->id)->where('status', 'aprovada')->get('image_path');
 
         if (!$fotosEvento) {
             return response()->json(['message' => 'Não foram encontradas fotos para esse evento..'], 404);
