@@ -16,6 +16,9 @@ Route::middleware('auth:api')->post('events', [EventosController::class, 'store'
 Route::middleware('auth:api')->get('event/{id}', [EventosController::class, 'show']);
 
 Route::post('/upload', [EventosController::class, 'uploadImage']);
+Route::put('/imagens/aprovar/{id}', [EventosController::class, 'aprovar']);
+Route::put('/imagens/rejeitar/{id}', [EventosController::class, 'rejeitar']);
+Route::delete('/imagens/excluir/{id}', [EventosController::class, 'excluir']);
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API Laravel funcionando!']);

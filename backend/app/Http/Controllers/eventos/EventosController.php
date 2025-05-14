@@ -87,7 +87,7 @@ class EventosController extends Controller
             $caminhos = [];
             foreach ($fotos as $foto) {
                 $codigo = $this->generateUniqueCode();
-                $filename = 'foto-' . $codigo . '.' . $foto->getClientOriginalExtension();
+                $filename = $codigoEvento . 'foto-' . $codigo . '.' . $foto->getClientOriginalExtension();
                 $caminho = $foto->storeAs('eventos/fotos', $filename, 'public');
                 EventosFotos::create([
                     'evento_id' => $evento->id,
@@ -103,5 +103,42 @@ class EventosController extends Controller
         ], 200);
     }
 
+    public function aprovar($id)
+    {
+        $fotosEvento = EventosFotos::find($id);
+        if (!$fotosEvento) {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
+        $fotosEvento->status = 'aprovada';
+        $fotosEvento->save();
 
+        return response()->json([
+            'message' => 'Foto aprovada com sucesso.',
+        ], 200);
+    }
+
+    public function rejeitar($id)
+    {
+        $fotosEvento = EventosFotos::find($id);
+        if (!$fotosEvento) {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
+        $fotosEvento->status = 'rejeitada';
+        $fotosEvento->save();
+        return response()->json([
+            'message' => 'Foto rejeitada com sucesso.',
+        ], 200);
+    }
+
+    public function excluir($id)
+    {
+        $fotosEvento = EventosFotos::find($id);
+        if (!$fotosEvento) {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
+        $fotosEvento->delete();
+        return response()->json([
+            'message' => 'Foto excluída com sucesso.',
+        ], 200);
+    }
 }
