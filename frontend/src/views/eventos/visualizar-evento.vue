@@ -23,28 +23,29 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-zinc-700">
                 <div class="flex flex-col space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-400 font-medium">Nome:</span>
+                        <span class="text-zinc-400 text-md">Nome:</span>
                         <span class="text-zinc-200">{{ evento.nome }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-400 font-medium">Código:</span>
+                        <span class="text-zinc-400 text-md">Código:</span>
                         <span class="text-zinc-200">{{ evento.codigo }}</span>
                     </div>
                 </div>
 
                 <div class="flex flex-col space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-400 font-medium">Data:</span>
+                        <span class="text-zinc-400 text-md">Data:</span>
                         <span class="text-zinc-200">{{ evento.data }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-400 font-medium">Local:</span>
+                        <span class="text-zinc-400 text-md">Local:</span>
                         <span class="text-zinc-200">{{ evento.local }}</span>
                     </div>
                 </div>
             </div>
-            <div>
-                teste
+            <div class="flex gap-4">
+                <button class="bg-zinc-500" @click="redirectToUploadPage(evento.codigo)">pagina do qr code</button>
+                <button class="bg-zinc-500" @click="redirectToSlideshow(evento.codigo)">acessar slideshow</button>
             </div>
         </div>
     </div>
@@ -75,7 +76,13 @@ export default {
             } catch (error) {
                 console.error('Erro ao buscar evento:', error);
             }
-        }
+        },
+        redirectToSlideshow(codigo) {
+            this.$router.push({ name: 'slideshow-evento', params: { codigo } });
+        },
+        redirectToUploadPage(codigo) {
+            this.$router.push({ name: 'upload-evento', params: { codigo } });
+        },
     },
 }
 </script>

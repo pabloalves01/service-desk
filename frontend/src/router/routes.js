@@ -53,7 +53,17 @@ const routes = [
      meta: {
       requiresAuth: true,
     },
-  }
+  },
+    {
+    path: '/upload/evento/:codigo',
+    name: 'upload-evento',
+    component: () => import('../views/eventos/upload-evento.vue'),
+  },
+  {
+    path: '/slideshow/evento/:codigo',
+    name: 'slideshow-evento',
+    component: () => import('../views/eventos/slideshow-evento.vue'),
+  },
 ]
 
 const router = createRouter({
