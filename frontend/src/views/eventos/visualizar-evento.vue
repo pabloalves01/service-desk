@@ -52,7 +52,7 @@
           </template>
           Página do QR Code
         </Button>
-        <Button class="bg-zinc-800 hover:bg-zinc-700 text-white" @click="redirectToSlideshow(evento.codigo)">
+        <Button class="bg-zinc-800 hover:bg-zinc-700 text-white" @click="redirectToSlideshow(evento.id)">
           <template #icon>
             <Slideshow size="18px" class="mr-2" />
           </template>
@@ -190,8 +190,8 @@ export default {
         console.error('Erro ao buscar evento:', error);
       }
     },
-    redirectToSlideshow(codigo) {
-      this.$router.push({ name: 'slideshow-evento', params: { codigo } });
+    redirectToSlideshow(id) {
+      this.$router.push({ name: 'slideshow-evento', params: { id } });
     },
     redirectToUploadPage(codigo) {
       this.$router.push({ name: 'upload-evento', params: { codigo } });

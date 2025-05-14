@@ -19,6 +19,7 @@ Route::post('/upload', [EventosController::class, 'uploadImage']);
 Route::put('/imagens/aprovar/{id}', [EventosController::class, 'aprovar']);
 Route::put('/imagens/rejeitar/{id}', [EventosController::class, 'rejeitar']);
 Route::delete('/imagens/excluir/{id}', [EventosController::class, 'excluir']);
+Route::get('/imagens/evento/{id}', [EventosController::class, 'imagensEvento']);
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API Laravel funcionando!']);

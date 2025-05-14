@@ -141,4 +141,27 @@ class EventosController extends Controller
             'message' => 'Foto excluída com sucesso.',
         ], 200);
     }
+
+    public function imagensEvento($id)
+    {
+        $evento = Eventos::find($id);
+
+        $fotosEvento = EventosFotos::where('evento_id', $evento->id)->get('image_path');
+
+        if (!$fotosEvento) {
+            return response()->json(['message' => 'Não foram encontradas fotos para esse evento..'], 404);
+        }
+
+        return response()->json([
+            $fotosEvento,
+        ], 200);
+        // $evento = Eventos::with('fotos')->find($id);
+        // if (!$evento) {
+        //     return response()->json(['message' => 'Evento não encontrado'], 404);
+        // }
+
+        // $evento->data = Carbon::parse($evento->data)->format('d/m/Y H:i:s');
+
+        // return response()->json(['data' => $evento], 200);
+    }
 }

@@ -60,7 +60,7 @@ const routes = [
     component: () => import('../views/eventos/upload-evento.vue'),
   },
   {
-    path: '/slideshow/evento/:codigo',
+    path: '/slideshow/evento/:id',
     name: 'slideshow-evento',
     component: () => import('../views/eventos/slideshow-evento.vue'),
   },
