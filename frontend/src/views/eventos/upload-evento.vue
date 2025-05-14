@@ -108,23 +108,17 @@ export default {
     methods: {
         async save() {
             try {
-                console.log("Nome:", this.nome);
-                console.log("Fotos:", this.fotos);
                 const formData = new FormData();
                 formData.append('nome', this.nome);
                 formData.append('codigo', this.$route.params.codigo);
                 this.fotos.forEach(foto => {
-                    console.log("Enviando foto:", foto.file); // Verifica se o arquivo está presente
                     formData.append('fotos[]', foto.file);
                 });
-
                 const response = await axiosInstance.post('/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-
-                console.log("Fotos enviadas com sucesso:", response.data);
                 this.fotos = [];
             } catch (error) {
                 console.error("Erro ao salvar:", error);
