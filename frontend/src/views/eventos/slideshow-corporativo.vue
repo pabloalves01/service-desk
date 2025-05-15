@@ -32,25 +32,27 @@
           <CloudSun class="text-white" />
           <h2 class="font-bold text-lg mb-0">Previsão do Tempo</h2>
         </div>
-        <div class="flex items-center bg-white/10 p-3 rounded-md mt-3">
-          <div class="text-yellow-500 mr-3">
-            <div v-if="previsao">
-              <Sun v-if="previsao.description === 'céu limpo'" />
-              <CloudSun v-else-if="previsao.description === 'poucas nuvens'" />
-              <CloudSun v-else-if="previsao.description === 'nuvens dispersas'" />
-              <Cloud v-else-if="previsao.description === 'nuvens quebradas'" />
-              <Cloud v-else-if="previsao.description === 'nublado'" />
-              <CloudRain v-else-if="previsao.description === 'chuva leve'" />
-              <CloudRain v-else-if="previsao.description === 'chuva'" class="animate-bounce" />
-              <CloudLightning v-else-if="previsao.description === 'trovoadas'" />
-              <Snowflake v-else-if="previsao.description === 'neve'" />
-              <Droplet v-else-if="previsao.description === 'névoa'" />
-              <HelpCircle v-else />
+        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
+          <div class="flex gap-2">
+            <div class="text-yellow-500 mr-3">
+              <div v-if="previsao">
+                <Sun v-if="previsao.description === 'céu limpo'" />
+                <CloudSun v-else-if="previsao.description === 'poucas nuvens'" />
+                <CloudSun v-else-if="previsao.description === 'nuvens dispersas'" />
+                <Cloud v-else-if="previsao.description === 'nuvens quebradas'" />
+                <Cloud v-else-if="previsao.description === 'nublado'" />
+                <CloudRain v-else-if="previsao.description === 'chuva leve'" />
+                <CloudRain v-else-if="previsao.description === 'chuva'" class="animate-bounce" />
+                <CloudLightning v-else-if="previsao.description === 'trovoadas'" />
+                <Snowflake v-else-if="previsao.description === 'neve'" />
+                <Droplet v-else-if="previsao.description === 'névoa'" />
+                <HelpCircle v-else />
+              </div>
             </div>
-          </div>
-
-          <div>
             <span class="font-semibold text-base text-white">{{ previsao.city }}</span>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <Thermometer />
             <span class="ml-4 text-base text-white">{{ previsao.temperature }}°</span>
           </div>
         </div>
@@ -151,7 +153,7 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle } from 'lucide-vue-next';
+import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer } from 'lucide-vue-next';
 
 export default {
   components: {
@@ -163,7 +165,8 @@ export default {
     CloudLightning,
     Snowflake,
     Droplet,
-    HelpCircle
+    HelpCircle,
+    Thermometer
   },
   data() {
     return {
