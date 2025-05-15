@@ -39,12 +39,8 @@
       </div>
       <div class="flex flex-col gap-2">
         <label for="email" class="font-semibold">Nascimento</label>
-        <DatePicker
-          id="datepicker-24h"
-          v-model="aniversariante.data_nascimento"
-          fluid
-          dateFormat="dd/mm/yy"
-        />
+        <DatePicker id="datepicker-24h" v-model="aniversariante.data_nascimento" fluid dateFormat="dd/mm/yy" />
+
       </div>
       <div class="flex flex-col gap-2">
         <label for="email" class="font-semibold">Setor</label>
@@ -87,6 +83,7 @@ export default {
   },
   name: 'GerenciarAniversariantes',
   data() {
+
     return {
       visible: false,
       aniversariante: {
