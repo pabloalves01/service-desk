@@ -199,10 +199,10 @@ export default {
       ]
     };
   },
-  created() {
-    this.getEvento();
-    this.getAniversariantes();
-    this.getPrevisaoTempo();
+  async created() {
+    await this.getEvento();
+    await this.getAniversariantes();
+    await this.getPrevisaoTempo();
   },
   mounted() {
     this.updateTime();
