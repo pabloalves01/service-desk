@@ -53,18 +53,27 @@
           </div>
           <div class="flex gap-2 mt-4">
             <Thermometer />
-            <span class="ml-4 text-base text-white">{{ previsao.temperature }}°</span>
+            <span class="ml-4 text-base font-bold text-white">{{ previsao.temperature }}°</span>
           </div>
         </div>
       </div>
-
-      <div class="mt-auto p-4 bg-[#011E41]/50 rounded-lg mx-2 mb-2">
-        <div class="text-6xl text-white font-light">{{ dia }}</div>
-        <div class="text-xl text-gray-300 uppercase">{{ diaSemana }}<span class="ml-2">{{ mes }}</span></div>
-        <div class="text-4xl text-white mt-2 font-light">{{ hora }}</div>
+      <div class="mt-auto p-4  rounded-lg mx-2 mb-2">
+        <div class="flex text-6xl text-white gap-4">
+          <span class="font-semibold">
+            {{ dia }}
+          </span>
+          <div class="flex flex-col">
+            <div class="text-xl text-gray-300 uppercase font-semibold">{{ diaSemana }}</div>
+            <span class="text-xl">{{ mes }}</span>
+          </div>
+        </div>
+        <div class="border border-gray-700 my-4"></div>
+        <div class="flex text-4xl flex justify-center items-center gap-4 text-white mt-2 font-light">
+          <Clock />
+          <div>{{ hora }}</div>
+        </div>
       </div>
     </div>
-
     <!-- Conteúdo principal -->
     <div class="flex-1 flex flex-col">
       <!-- Área do slideshow -->
@@ -153,7 +162,7 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer } from 'lucide-vue-next';
+import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer, Clock } from 'lucide-vue-next';
 
 export default {
   components: {
@@ -166,7 +175,8 @@ export default {
     Snowflake,
     Droplet,
     HelpCircle,
-    Thermometer
+    Thermometer,
+    Clock
   },
   data() {
     return {
@@ -223,15 +233,15 @@ export default {
   },
   computed: {
     dia() {
-      return this.currentDate.getDate(); // Retorna o dia do mês
+      return this.currentDate.getDate();
     },
     diaSemana() {
       const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
-      return diasDaSemana[this.currentDate.getDay()]; // Retorna o dia da semana
+      return diasDaSemana[this.currentDate.getDay()];
     },
     mes() {
-      const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-      return meses[this.currentDate.getMonth()]; // Retorna o mês abreviado
+      const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+      return meses[this.currentDate.getMonth()];
     },
     hora() {
       return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
