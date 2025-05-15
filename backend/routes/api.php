@@ -6,6 +6,7 @@ use App\Http\Controllers\auth\AuthController;
 use App\Http\Controllers\corporacao\AniversariantesController;
 use App\Http\Controllers\corporacao\SlideshowController;
 use App\Http\Controllers\eventos\EventosController;
+use App\Http\Controllers\WeatherController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,6 +27,8 @@ Route::get('/imagens/evento/{id}', [EventosController::class, 'imagensEvento']);
 Route::get('/aniversariantes', [SlideshowController::class, 'getAniversariantes']);
 Route::post('/aniversariante', [AniversariantesController::class, 'store']);
 Route::get('/aniversariante', [AniversariantesController::class, 'index']);
+
+Route::get('/weather/imbituba', [WeatherController::class, 'index']);
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API Laravel funcionando!']);

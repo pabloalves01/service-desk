@@ -1,17 +1,21 @@
 <template>
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar esquerda -->
-    <div class="w-64 bg-gradient-to-b from-[#0E396C] to-[#011E41] flex flex-col border-r border-white/20 overflow-y-auto">
+    <div
+      class="w-64 bg-gradient-to-b from-[#0E396C] to-[#011E41] flex flex-col border-r border-white/20 overflow-y-auto">
       <!-- Aniversariantes -->
       <div class="p-4">
-        <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo" class="w-full max-w-[200px] mx-auto mb-4 py-4" />
+        <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo"
+          class="w-full max-w-[200px] mx-auto mb-4 py-4" />
         <div class="flex gap-2 items-center">
           <Cake class="text-white" />
           <h2 class="font-bold text-lg mb-0">Aniversariantes</h2>
         </div>
         <div class="space-y-3 mt-3">
-          <div v-for="(aniversariante, index) in aniversariantes" :key="index" class="flex items-start bg-white/10 p-2 rounded-md">
-            <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+          <div v-for="(aniversariante, index) in aniversariantes" :key="index"
+            class="flex items-start bg-white/10 p-2 rounded-md">
+            <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia
+            }}</span>
             <div>
               <div class="font-semibold text-white">{{ aniversariante.nome }}</div>
               <div class="text-xs text-gray-300">{{ aniversariante.departamento }}</div>
@@ -30,22 +34,24 @@
         </div>
         <div class="flex items-center bg-white/10 p-3 rounded-md mt-3">
           <div class="text-yellow-500 mr-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
+            <div v-if="previsao">
+              <Sun v-if="previsao.description === 'céu limpo'" />
+              <CloudSun v-else-if="previsao.description === 'poucas nuvens'" />
+              <CloudSun v-else-if="previsao.description === 'nuvens dispersas'" />
+              <Cloud v-else-if="previsao.description === 'nuvens quebradas'" />
+              <Cloud v-else-if="previsao.description === 'nublado'" />
+              <CloudRain v-else-if="previsao.description === 'chuva leve'" />
+              <CloudRain v-else-if="previsao.description === 'chuva'" class="animate-bounce" />
+              <CloudLightning v-else-if="previsao.description === 'trovoadas'" />
+              <Snowflake v-else-if="previsao.description === 'neve'" />
+              <Droplet v-else-if="previsao.description === 'névoa'" />
+              <HelpCircle v-else />
+            </div>
           </div>
+
           <div>
-            <span class="font-semibold text-white">IMBITUBA</span>
-            <span class="ml-4 text-2xl text-white">{{ temperatura }}°</span>
+            <span class="font-semibold text-base text-white">{{ previsao.city }}</span>
+            <span class="ml-4 text-base text-white">{{ previsao.temperature }}°</span>
           </div>
         </div>
       </div>
@@ -68,16 +74,13 @@
               'absolute transition-opacity duration-500',
               currentIndex === index ? 'opacity-100' : 'opacity-0',
               'max-w-full max-h-full w-auto h-auto object-contain'
-            ]" 
-            style="aspect-ratio: 16/9;" 
-            alt="Imagem do evento" />
+            ]" style="aspect-ratio: 16/9;" alt="Imagem do evento" />
         </div>
 
         <!-- Estado vazio -->
         <div v-else class="flex flex-col items-center justify-center h-full text-zinc-500">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            class="mb-4 opacity-50">
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="mb-4 opacity-50">
             <line x1="2" x2="22" y1="2" y2="22"></line>
             <path d="M10.41 10.41a2 2 0 1 1-2.83-2.83"></path>
             <line x1="13.5" x2="6.5" y1="13.5" y2="20.5"></line>
@@ -121,7 +124,8 @@
             <Fullscreen class="text-white hover:text-zinc-300" size="24" />
           </button>
         </div>
-        <div v-if="fotos.length > 0" class="absolute top-4 right-4 bg-black/50 text-white text-xs px-3 py-2 rounded font-medium">
+        <div v-if="fotos.length > 0"
+          class="absolute top-4 right-4 bg-black/50 text-white text-xs px-3 py-2 rounded font-medium">
           {{ currentIndex + 1 }} / {{ fotos.length }}
         </div>
       </div>
@@ -147,16 +151,23 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen, Cake, CloudSun } from 'lucide-vue-next';
+import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle } from 'lucide-vue-next';
 
 export default {
   components: {
     Fullscreen,
     Cake,
-    CloudSun
+    CloudSun,
+    Cloud,
+    CloudRain,
+    CloudLightning,
+    Snowflake,
+    Droplet,
+    HelpCircle
   },
   data() {
     return {
+      previsao: null,
       fotos: [],
       idEvento: this.$route.params.id,
       currentIndex: 0,
@@ -191,6 +202,7 @@ export default {
   created() {
     this.getEvento();
     this.getAniversariantes();
+    this.getPrevisaoTempo();
   },
   mounted() {
     this.updateTime();
@@ -223,6 +235,12 @@ export default {
     }
   },
   methods: {
+    async getPrevisaoTempo() {
+      const response = await axiosInstance.get('/weather/imbituba');
+      this.previsao = response.data;
+
+      console.log(response);
+    },
     updateTime() {
       this.currentDate = new Date();
     },
@@ -322,7 +340,8 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: #000;
-  max-height: calc(100vh - 80px); /* Altura total menos a altura da barra de notícias */
+  max-height: calc(100vh - 80px);
+  /* Altura total menos a altura da barra de notícias */
 }
 
 /* Manter proporção 16:9 (1920x1080) */
@@ -340,7 +359,7 @@ export default {
   .flex-1.relative {
     height: calc(100vh - 80px);
   }
-  
+
   .w-64 {
     min-width: 16rem;
     max-width: 16rem;

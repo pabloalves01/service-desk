@@ -23,8 +23,6 @@
           <div class="flex justify-center gap-2">
             <Button icon="pi pi-pencil" severity="secondary" variant="text" rounded aria-label="Bookmark" />
             <Button icon="pi pi-trash" severity="danger" variant="text" rounded aria-label="Bookmark" />
-            <!-- <Button label="Editar" icon="pi pi-pencil" class="p-button-info p-button-rounded p-button-sm" @click="editEmployee(data)" />
-            <Button label="Excluir" icon="pi pi-trash" class="p-button-danger p-button-rounded p-button-sm" @click="deleteEmployee(data.id)" /> -->
           </div>
         </template>
       </Column>
@@ -57,7 +55,6 @@
 </template>
 
 <script>
-// import Button from '@/components/comum/buttons/button.vue';
 import { Button } from 'primevue';
 import ButtonComponent from '@/components/comum/buttons/button.vue';
 import DataTable from 'primevue/datatable';
