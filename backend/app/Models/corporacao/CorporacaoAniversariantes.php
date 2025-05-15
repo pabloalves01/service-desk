@@ -12,6 +12,7 @@ class CorporacaoAniversariantes extends Model
     protected $fillable = [
         'nome',
         'setor_id',
+        'data_nascimento',
         'dia',
         'mes',
     ];

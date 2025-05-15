@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nome');
             $table->unsignedBigInteger('setor_id');
             $table->foreign('setor_id')->references('id')->on('corporacao_setores');
+            $table->date('data_nascimento');
             $table->string('dia');
             $table->string('mes');
             $table->timestamps();
