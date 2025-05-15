@@ -113,10 +113,13 @@ export default {
   },
   methods: {
     async getAniversariantes() {
+      this.loading = true;
       try {
         const response = await axiosInstance.get('/aniversariante');
         this.aniversariantes = response.data.data;
+        this.loading = false;
       } catch (error) {
+        this.loading = false;
         console.error('Erro ao buscar aniversariantes:', error);
       }
     },
