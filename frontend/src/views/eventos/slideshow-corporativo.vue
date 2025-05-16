@@ -57,20 +57,18 @@
           </div>
         </div>
       </div>
-      <div class="mt-auto p-4  rounded-lg mx-2 mb-2">
-        <div class="flex text-6xl text-white gap-4">
-          <span class="font-semibold">
-            {{ dia }}
-          </span>
-          <div class="flex flex-col">
-            <div class="text-xl text-gray-300 uppercase font-semibold">{{ diaSemana }}</div>
-            <span class="text-xl">{{ mes }}</span>
-          </div>
+      <div class="mt-auto p-4 gap-1 flex flex-col rounded-lg mx-2 mb-2 text-[24px] font-semibold">
+        <span >{{ diaSemana }}</span>
+        <div class="flex">
+          {{ dia }} de {{ mes }}
         </div>
-        <div class="border border-gray-700 my-4"></div>
-        <div class="flex text-4xl flex justify-center items-center gap-4 text-white mt-2 font-light">
+        <div class="flex items-center gap-2">
           <Clock />
-          <div>{{ hora }}</div>
+
+          {{ hora }}
+        </div>
+        <!-- <div class="border border-gray-700 my-4"></div> -->
+        <div class="flex text-4xl flex justify-center items-center gap-4 text-white mt-2 font-light">
         </div>
       </div>
     </div>
@@ -236,11 +234,11 @@ export default {
       return this.currentDate.getDate();
     },
     diaSemana() {
-      const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+      const diasDaSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       return diasDaSemana[this.currentDate.getDay()];
     },
     mes() {
-      const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+      const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       return meses[this.currentDate.getMonth()];
     },
     hora() {
