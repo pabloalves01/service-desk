@@ -9,17 +9,34 @@
           class="w-full max-w-[200px] mx-auto mb-4 py-4" />
         <div class="flex gap-2 items-center">
           <Cake class="text-white" />
-          <h2 class="font-bold text-lg mb-0">Aniversariantes</h2>
+          <h2 class="font-bold text-lg mb-0 text-white">Aniversariantes</h2>
         </div>
-        <div class="space-y-3 mt-3">
-          <div v-for="(aniversariante, index) in aniversariantes" :key="index"
-            class="flex items-start bg-white/10 p-2 rounded-md">
-            <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia
-            }}</span>
-            <div>
-              <div class="font-semibold text-white">{{ aniversariante.nome }}</div>
-              <div class="text-xs text-gray-300">{{ aniversariante.departamento }}</div>
+        
+        <!-- Carrossel vertical de aniversariantes -->
+        <div class="relative h-[275px] mt-3 overflow-hidden">
+          <div class="space-y-3 transition-transform duration-500" 
+               :style="{ transform: `translateY(-${currentAniversarianteIndex * 60}px)` }">
+            <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
+              class="flex items-start bg-white/10 p-2 rounded-md">
+              <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+              <div>
+                <div class="font-semibold text-white">{{ aniversariante.nome }}</div>
+                <div class="text-xs text-gray-300">{{ aniversariante.departamento }}</div>
+              </div>
             </div>
+          </div>
+          
+          <!-- Indicadores de navegação -->
+          <div v-if="aniversariantes.length > 3"
+            class="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
+            <button 
+              v-for="i in Math.ceil(aniversariantes.length / 3)" 
+              :key="i" 
+              @click="setAniversariantePage((i-1) * 3)"
+              class="w-2 h-2 rounded-full transition-colors" 
+              :class="Math.floor(currentAniversarianteIndex / 3) === i-1 ? 'bg-white' : 'bg-zinc-500'"
+              aria-label="Navegar para página de aniversariantes">
+            </button>
           </div>
         </div>
       </div>
@@ -30,7 +47,7 @@
       <div class="p-4">
         <div class="flex gap-2 items-center">
           <CloudSun class="text-white" />
-          <h2 class="font-bold text-lg mb-0">Previsão do Tempo</h2>
+          <h2 class="font-bold text-lg mb-0 text-white">Previsão do Tempo</h2>
         </div>
         <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
           <div class="flex gap-2">
@@ -49,11 +66,11 @@
                 <HelpCircle v-else />
               </div>
             </div>
-            <span class="font-semibold text-base text-white">{{ previsao.city }}</span>
+            <span class="font-semibold text-base text-white">{{ previsao?.city }}</span>
           </div>
           <div class="flex gap-2 mt-4">
             <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsao.temperature }}°</span>
+            <span class="ml-4 text-base font-bold text-white">{{ previsao?.temperature }}°</span>
           </div>
         </div>
         <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
@@ -73,14 +90,14 @@
                 <HelpCircle v-else />
               </div>
             </div>
-            <span class="font-semibold text-base text-white">{{ previsaoPien.city }}</span>
+            <span class="font-semibold text-base text-white">{{ previsaoPien?.city }}</span>
           </div>
           <div class="flex gap-2 mt-4">
             <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoPien.temperature }}°</span>
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoPien?.temperature }}°</span>
           </div>
         </div>
-         <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
+        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
           <div class="flex gap-2">
             <div class="text-yellow-500 mr-3">
               <div v-if="previsaoRioClaro">
@@ -97,11 +114,11 @@
                 <HelpCircle v-else />
               </div>
             </div>
-            <span class="font-semibold text-base text-white">{{ previsaoRioClaro.city }}</span>
+            <span class="font-semibold text-base text-white">{{ previsaoRioClaro?.city }}</span>
           </div>
           <div class="flex gap-2 mt-4">
             <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoRioClaro.temperature }}°</span>
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoRioClaro?.temperature }}°</span>
           </div>
         </div>
         <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
@@ -121,25 +138,23 @@
                 <HelpCircle v-else />
               </div>
             </div>
-            <span class="font-semibold text-base text-white">{{ previsaoGuaira.city }}</span>
+            <span class="font-semibold text-base text-white">{{ previsaoGuaira?.city }}</span>
           </div>
           <div class="flex gap-2 mt-4">
             <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoGuaira.temperature }}°</span>
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoGuaira?.temperature }}°</span>
           </div>
         </div>
       </div>
-      <div class="mt-auto p-4 gap-1 flex flex-col rounded-lg mx-2 mb-2 text-[24px] font-semibold">
-        <span >{{ diaSemana }}</span>
+      <div class="mt-auto p-4 gap-1 flex flex-col rounded-lg mx-2 mb-2 text-[24px] font-semibold text-white">
+        <span>{{ diaSemana }}</span>
         <div class="flex">
           {{ dia }} de {{ mes }}
         </div>
         <div class="flex items-center gap-2">
           <Clock />
-
           {{ hora }}
         </div>
-        <!-- <div class="border border-gray-700 my-4"></div> -->
         <div class="flex text-4xl flex justify-center items-center gap-4 text-white mt-2 font-light">
         </div>
       </div>
@@ -261,11 +276,12 @@ export default {
       timer: null,
       noticiaAtualIndex: 0,
       noticiaTimer: null,
-
-      // Dados fixos para o layout
-      aniversariantes: [
-        // Dados serão preenchidos pela API
-      ],
+      
+      // Dados para o carrossel de aniversariantes
+      aniversariantes: [],
+      currentAniversarianteIndex: 0,
+      aniversarianteTimer: null,
+      
       currentDate: new Date(),
       temperatura: 26,
 
@@ -286,25 +302,6 @@ export default {
       ]
     };
   },
-  async created() {
-    await this.getEvento();
-    await this.getAniversariantes();
-    await this.fetchPrevisao();
-  },
-  mounted() {
-    this.updateTime();
-    this.intervalId = setInterval(this.updateTime, 1000);
-
-    this.startSlideshow();
-    this.startNoticiaRotation();
-    window.addEventListener('resize', this.handleResize);
-  },
-  beforeDestroy() {
-    clearInterval(this.intervalId);
-    this.stopSlideshow();
-    this.stopNoticiaRotation();
-    window.removeEventListener('resize', this.handleResize);
-  },
   computed: {
     dia() {
       return this.currentDate.getDate();
@@ -321,6 +318,40 @@ export default {
       return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   },
+  async created() {
+    await this.getEvento();
+    await this.getAniversariantes();
+    await this.fetchPrevisao();
+  },
+  mounted() {
+    this.updateTime();
+    this.intervalId = setInterval(this.updateTime, 1000);
+
+    this.startSlideshow();
+    this.startNoticiaRotation();
+    this.startAniversarianteCarousel();
+    window.addEventListener('resize', this.handleResize);
+    
+    // Adicionar dados de teste para aniversariantes se estiver vazio
+    if (this.aniversariantes.length === 0) {
+      this.aniversariantes = [
+        { id: 1, dia: '05', nome: 'João Silva', departamento: 'TI' },
+        { id: 2, dia: '12', nome: 'Maria Oliveira', departamento: 'RH' },
+        { id: 3, dia: '15', nome: 'Pedro Santos', departamento: 'Financeiro' },
+        { id: 4, dia: '18', nome: 'Ana Costa', departamento: 'Marketing' },
+        { id: 5, dia: '22', nome: 'Carlos Souza', departamento: 'Vendas' },
+        { id: 6, dia: '25', nome: 'Fernanda Lima', departamento: 'Administrativo' },
+        { id: 7, dia: '28', nome: 'Roberto Alves', departamento: 'Logística' }
+      ];
+    }
+  },
+  beforeUnmount() {
+    clearInterval(this.intervalId);
+    this.stopSlideshow();
+    this.stopNoticiaRotation();
+    this.stopAniversarianteCarousel();
+    window.removeEventListener('resize', this.handleResize);
+  },
   methods: {
     fetchPrevisao() {
       return Promise.all([
@@ -331,28 +362,36 @@ export default {
       ]);
     },
     async getPrevisaoTempoImbituba() {
-      const response = await axiosInstance.get('/weather/imbituba');
-      this.previsao = response.data;
-
-      console.log(response);
+      try {
+        const response = await axiosInstance.get('/weather/imbituba');
+        this.previsao = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar previsão de Imbituba:", error);
+      }
     },
     async getPrevisaoTempoRioClaro() {
-      const response = await axiosInstance.get('/weather/rio-claro');
-      this.previsaoRioClaro = response.data;
-
-      console.log(response);
+      try {
+        const response = await axiosInstance.get('/weather/rio-claro');
+        this.previsaoRioClaro = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar previsão de Rio Claro:", error);
+      }
     },
     async getPrevisaoTempoGuaira() {
-      const response = await axiosInstance.get('/weather/guaira');
-      this.previsaoGuaira = response.data;
-
-      console.log(response);
+      try {
+        const response = await axiosInstance.get('/weather/guaira');
+        this.previsaoGuaira = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar previsão de Guaíra:", error);
+      }
     },
     async getPrevisaoTempoPien() {
-      const response = await axiosInstance.get('/weather/pien');
-      this.previsaoPien = response.data;
-
-      console.log(response);
+      try {
+        const response = await axiosInstance.get('/weather/pien');
+        this.previsaoPien = response.data;
+      } catch (error) {
+        console.error("Erro ao buscar previsão de Pien:", error);
+      }
     },
     updateTime() {
       this.currentDate = new Date();
@@ -376,6 +415,7 @@ export default {
         console.error("Erro ao buscar imagens do evento:", error);
       }
     },
+    // Métodos para o slideshow de imagens
     startSlideshow() {
       this.stopSlideshow();
       this.timer = setInterval(() => {
@@ -402,6 +442,33 @@ export default {
       this.stopSlideshow();
       this.startSlideshow();
     },
+    // Métodos para o carrossel de aniversariantes
+    startAniversarianteCarousel() {
+      this.stopAniversarianteCarousel();
+      this.aniversarianteTimer = setInterval(() => {
+        this.nextAniversariantePage();
+      }, 5000); // Troca a cada 5 segundos
+    },
+    stopAniversarianteCarousel() {
+      if (this.aniversarianteTimer) {
+        clearInterval(this.aniversarianteTimer);
+        this.aniversarianteTimer = null;
+      }
+    },
+    nextAniversariantePage() {
+      if (this.aniversariantes.length <= 3) {
+        return; // Não há necessidade de rotação se todos cabem na tela
+      }
+      
+      // Avança para o próximo aniversariante, um por um
+      this.currentAniversarianteIndex = (this.currentAniversarianteIndex + 1) % this.aniversariantes.length;
+    },
+    setAniversariantePage(index) {
+      this.currentAniversarianteIndex = index;
+      this.stopAniversarianteCarousel();
+      this.startAniversarianteCarousel();
+    },
+    // Outros métodos
     toggleFullscreen() {
       const elem = this.$el.querySelector('.relative');
       if (!document.fullscreenElement) {
@@ -486,5 +553,13 @@ export default {
 
 .text-gray-300 {
   color: #d1d5db;
+}
+
+/* Estilos para o carrossel de aniversariantes */
+.relative.h-\[200px\] {
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, 
+    rgba(0,0,0,1) 70%, 
+    rgba(0,0,0,0));
 }
 </style>
