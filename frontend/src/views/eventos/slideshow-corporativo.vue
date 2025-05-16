@@ -19,9 +19,22 @@
               <h2 class="font-bold text-lg text-white">Aniversariantes</h2>
             </div>
             
-            <!-- Carrossel vertical de aniversariantes -->
-            <div class="relative h-[500px] overflow-hidden">
-              <div class="space-y-2 transition-transform duration-500" 
+            <!-- Seção adaptativa de aniversariantes -->
+            <div class="relative" :class="aniversariantesContainerClass">
+              <!-- Quando há 5 ou menos aniversariantes, mostra todos -->
+              <div v-if="aniversariantes.length <= 5" class="space-y-2">
+                <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
+                  class="flex items-start bg-white/10 p-2 rounded-md">
+                  <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                  <div class="overflow-hidden">
+                    <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
+                    <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Quando há mais de 5 aniversariantes, usa carrossel -->
+              <div v-else class="space-y-2 transition-transform duration-500" 
                 :style="{ transform: `translateY(-${currentAniversarianteIndex * 60}px)` }">
                 <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
                   class="flex items-start bg-white/10 p-2 rounded-md">
@@ -33,15 +46,15 @@
                 </div>
               </div>
               
-              <!-- Indicadores de navegação -->
-              <div v-if="aniversariantes.length > 2"
+              <!-- Indicadores de navegação (apenas quando há mais de 5 aniversariantes) -->
+              <div v-if="aniversariantes.length > 5"
                 class="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
                 <button 
-                  v-for="i in Math.ceil(aniversariantes.length / 2)" 
+                  v-for="i in Math.ceil(aniversariantes.length / 5)" 
                   :key="i" 
-                  @click="setAniversariantePage((i-1) * 2)"
+                  @click="setAniversariantePage((i-1) * 5)"
                   class="w-1.5 h-1.5 rounded-full transition-colors" 
-                  :class="Math.floor(currentAniversarianteIndex / 2) === i-1 ? 'bg-white' : 'bg-zinc-500'"
+                  :class="Math.floor(currentAniversarianteIndex / 5) === i-1 ? 'bg-white' : 'bg-zinc-500'"
                   aria-label="Navegar para página de aniversariantes">
                 </button>
               </div>
@@ -314,6 +327,17 @@ export default {
     },
     hora: function() {
       return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    },
+    // Classe dinâmica para o container de aniversariantes
+    aniversariantesContainerClass: function() {
+      // Se tiver 5 ou menos aniversariantes, altura fixa baseada no número de itens
+      if (this.aniversariantes.length <= 5) {
+        return 'h-auto max-h-[320px] overflow-hidden';
+      } 
+      // Se tiver mais de 5, altura fixa para mostrar 5 itens e overflow hidden para o carrossel
+      else {
+        return 'h-[320px] overflow-hidden';
+      }
     }
   },
   created: function() {
@@ -327,8 +351,6 @@ export default {
 
     this.startSlideshow();
     this.startNoticiaRotation();
-    this.startAniversarianteCarousel();
-    window.addEventListener('resize', this.handleResize);
     
     // Adicionar dados de teste para aniversariantes se estiver vazio
     if (this.aniversariantes.length === 0) {
@@ -342,6 +364,11 @@ export default {
         { id: 7, dia: '28', nome: 'Roberto Alves', departamento: 'Logística' }
       ];
     }
+    
+    // Inicia o carrossel apenas se houver mais de 5 aniversariantes
+    this.startAniversarianteCarouselIfNeeded();
+    
+    window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy: function() {
     clearInterval(this.intervalId);
@@ -349,6 +376,12 @@ export default {
     this.stopNoticiaRotation();
     this.stopAniversarianteCarousel();
     window.removeEventListener('resize', this.handleResize);
+  },
+  watch: {
+    // Observa mudanças na lista de aniversariantes para iniciar ou parar o carrossel conforme necessário
+    aniversariantes: function() {
+      this.startAniversarianteCarouselIfNeeded();
+    }
   },
   methods: {
     fetchPrevisao: function() {
@@ -361,37 +394,37 @@ export default {
     },
     getPrevisaoTempoImbituba: function() {
       return axiosInstance.get('/weather/imbituba')
-        .then(response => {
+        .then(function(response) {
           this.previsao = response.data;
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar previsão de Imbituba:", error);
         });
     },
     getPrevisaoTempoRioClaro: function() {
       return axiosInstance.get('/weather/rio-claro')
-        .then(response => {
+        .then(function(response) {
           this.previsaoRioClaro = response.data;
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar previsão de Rio Claro:", error);
         });
     },
     getPrevisaoTempoGuaira: function() {
       return axiosInstance.get('/weather/guaira')
-        .then(response => {
+        .then(function(response) {
           this.previsaoGuaira = response.data;
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar previsão de Guaíra:", error);
         });
     },
     getPrevisaoTempoPien: function() {
       return axiosInstance.get('/weather/pien')
-        .then(response => {
+        .then(function(response) {
           this.previsaoPien = response.data;
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar previsão de Pien:", error);
         });
     },
@@ -403,19 +436,19 @@ export default {
       return axiosInstance.get('/aniversariantes', {
         params: { mes: mesAtual },
       })
-        .then(response => {
+        .then(function(response) {
           this.aniversariantes = response.data;
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar aniversariantes:", error);
         });
     },
     getEvento: function() {
       return axiosInstance.get(`/imagens/evento/${this.idEvento}`)
-        .then(response => {
+        .then(function(response) {
           this.fotos = response.data[0];
-        })
-        .catch(error => {
+        }.bind(this))
+        .catch(function(error) {
           console.error("Erro ao buscar imagens do evento:", error);
         });
     },
@@ -445,6 +478,14 @@ export default {
       this.startSlideshow();
     },
     // Métodos para o carrossel de aniversariantes
+    startAniversarianteCarouselIfNeeded: function() {
+      // Inicia o carrossel apenas se houver mais de 5 aniversariantes
+      if (this.aniversariantes.length > 5) {
+        this.startAniversarianteCarousel();
+      } else {
+        this.stopAniversarianteCarousel();
+      }
+    },
     startAniversarianteCarousel: function() {
       this.stopAniversarianteCarousel();
       this.aniversarianteTimer = setInterval(this.nextAniversariantePage, 5000); // Troca a cada 5 segundos
@@ -456,7 +497,7 @@ export default {
       }
     },
     nextAniversariantePage: function() {
-      if (this.aniversariantes.length <= 2) {
+      if (this.aniversariantes.length <= 5) {
         return; // Não há necessidade de rotação se todos cabem na tela
       }
       
@@ -547,18 +588,17 @@ export default {
   color: #d1d5db;
 }
 
-/* Estilos para o carrossel de aniversariantes */
-.relative.h-\[120px\] {
-  overflow: hidden;
-  mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,1) 80%, 
-    rgba(0,0,0,0));
-}
-
 /* Truncar texto longo */
 .truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Efeito de máscara para o carrossel */
+.h-\[320px\] {
+  mask-image: linear-gradient(to bottom, 
+    rgba(0,0,0,1) 90%, 
+    rgba(0,0,0,0));
 }
 </style>
