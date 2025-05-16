@@ -2,163 +2,161 @@
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar esquerda -->
     <div
-      class="w-64 bg-gradient-to-b from-[#0E396C] to-[#011E41] flex flex-col border-r border-white/20 overflow-y-auto">
-      <!-- Aniversariantes -->
-      <div class="p-4">
-        <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo"
-          class="w-full max-w-[200px] mx-auto mb-4 py-4" />
-        <div class="flex gap-2 items-center">
-          <Cake class="text-white" />
-          <h2 class="font-bold text-lg mb-0 text-white">Aniversariantes</h2>
+      class="sidebar-width bg-gradient-to-b from-[#0E396C] to-[#011E41] flex flex-col border-r border-white/20 overflow-hidden">
+      <div class="flex flex-col h-full">
+        <!-- Logo -->
+        <div class="p-4 flex-shrink-0">
+          <img :src="$globals.urlBase() + $globals.logoCorporativa()" alt="Logo"
+            class="w-full max-w-[180px] mx-auto mb-2" />
         </div>
-        
-        <!-- Carrossel vertical de aniversariantes -->
-        <div class="relative h-[275px] mt-3 overflow-hidden">
-          <div class="space-y-3 transition-transform duration-500" 
-               :style="{ transform: `translateY(-${currentAniversarianteIndex * 60}px)` }">
-            <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
-              class="flex items-start bg-white/10 p-2 rounded-md">
-              <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
-              <div>
-                <div class="font-semibold text-white">{{ aniversariante.nome }}</div>
-                <div class="text-xs text-gray-300">{{ aniversariante.departamento }}</div>
+
+        <!-- Conteúdo da sidebar com grid para distribuição de espaço -->
+        <div class="flex flex-col flex-grow overflow-hidden">
+          <!-- Aniversariantes -->
+          <div class="p-3 flex-shrink-0">
+            <div class="flex gap-2 items-center mb-2">
+              <Cake class="text-white" />
+              <h2 class="font-bold text-lg text-white">Aniversariantes</h2>
+            </div>
+            
+            <!-- Carrossel vertical de aniversariantes -->
+            <div class="relative h-[500px] overflow-hidden">
+              <div class="space-y-2 transition-transform duration-500" 
+                :style="{ transform: `translateY(-${currentAniversarianteIndex * 60}px)` }">
+                <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
+                  class="flex items-start bg-white/10 p-2 rounded-md">
+                  <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                  <div class="overflow-hidden">
+                    <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
+                    <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Indicadores de navegação -->
+              <div v-if="aniversariantes.length > 2"
+                class="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
+                <button 
+                  v-for="i in Math.ceil(aniversariantes.length / 2)" 
+                  :key="i" 
+                  @click="setAniversariantePage((i-1) * 2)"
+                  class="w-1.5 h-1.5 rounded-full transition-colors" 
+                  :class="Math.floor(currentAniversarianteIndex / 2) === i-1 ? 'bg-white' : 'bg-zinc-500'"
+                  aria-label="Navegar para página de aniversariantes">
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-white/20 my-2 mx-3"></div>
+
+          <!-- Previsão do tempo - Versão compacta -->
+          <div class="p-3 flex-shrink-0 overflow-hidden">
+            <div class="flex gap-2 items-center mb-2">
+              <CloudSun class="text-white" />
+              <h2 class="font-bold text-lg text-white">Previsão do Tempo</h2>
+            </div>
+            
+            <!-- Grid para previsões do tempo -->
+            <div class="grid grid-cols-2 gap-2">
+              <!-- Imbituba -->
+              <div class="flex flex-col bg-white/10 p-2 rounded-md">
+                <div class="flex items-center gap-1">
+                  <div class="text-yellow-500 mr-1">
+                    <div v-if="previsao">
+                      <Sun v-if="previsao.description === 'céu limpo'" size="16" />
+                      <CloudSun v-else-if="previsao.description === 'poucas nuvens'" size="16" />
+                      <Cloud v-else-if="previsao.description === 'nublado'" size="16" />
+                      <CloudRain v-else-if="previsao.description === 'chuva'" size="16" />
+                      <HelpCircle v-else size="16" />
+                    </div>
+                  </div>
+                  <span class="font-semibold text-sm text-white truncate">{{ previsao ? previsao.city : 'Imbituba' }}</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  <Thermometer size="14" />
+                  <span class="text-sm font-bold text-white">{{ previsao ? previsao.temperature + '°' : '--°' }}</span>
+                </div>
+              </div>
+              
+              <!-- Pien -->
+              <div class="flex flex-col bg-white/10 p-2 rounded-md">
+                <div class="flex items-center gap-1">
+                  <div class="text-yellow-500 mr-1">
+                    <div v-if="previsaoPien">
+                      <Sun v-if="previsaoPien.description === 'céu limpo'" size="16" />
+                      <CloudSun v-else-if="previsaoPien.description === 'poucas nuvens'" size="16" />
+                      <Cloud v-else-if="previsaoPien.description === 'nublado'" size="16" />
+                      <CloudRain v-else-if="previsaoPien.description === 'chuva'" size="16" />
+                      <HelpCircle v-else size="16" />
+                    </div>
+                  </div>
+                  <span class="font-semibold text-sm text-white truncate">{{ previsaoPien ? previsaoPien.city : 'Pien' }}</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  <Thermometer size="14" />
+                  <span class="text-sm font-bold text-white">{{ previsaoPien ? previsaoPien.temperature + '°' : '--°' }}</span>
+                </div>
+              </div>
+              
+              <!-- Rio Claro -->
+              <div class="flex flex-col bg-white/10 p-2 rounded-md">
+                <div class="flex items-center gap-1">
+                  <div class="text-yellow-500 mr-1">
+                    <div v-if="previsaoRioClaro">
+                      <Sun v-if="previsaoRioClaro.description === 'céu limpo'" size="16" />
+                      <CloudSun v-else-if="previsaoRioClaro.description === 'poucas nuvens'" size="16" />
+                      <Cloud v-else-if="previsaoRioClaro.description === 'nublado'" size="16" />
+                      <CloudRain v-else-if="previsaoRioClaro.description === 'chuva'" size="16" />
+                      <HelpCircle v-else size="16" />
+                    </div>
+                  </div>
+                  <span class="font-semibold text-sm text-white truncate">{{ previsaoRioClaro ? previsaoRioClaro.city : 'Rio Claro' }}</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  <Thermometer size="14" />
+                  <span class="text-sm font-bold text-white">{{ previsaoRioClaro ? previsaoRioClaro.temperature + '°' : '--°' }}</span>
+                </div>
+              </div>
+              
+              <!-- Guaira -->
+              <div class="flex flex-col bg-white/10 p-2 rounded-md">
+                <div class="flex items-center gap-1">
+                  <div class="text-yellow-500 mr-1">
+                    <div v-if="previsaoGuaira">
+                      <Sun v-if="previsaoGuaira.description === 'céu limpo'" size="16" />
+                      <CloudSun v-else-if="previsaoGuaira.description === 'poucas nuvens'" size="16" />
+                      <Cloud v-else-if="previsaoGuaira.description === 'nublado'" size="16" />
+                      <CloudRain v-else-if="previsaoGuaira.description === 'chuva'" size="16" />
+                      <HelpCircle v-else size="16" />
+                    </div>
+                  </div>
+                  <span class="font-semibold text-sm text-white truncate">{{ previsaoGuaira ? previsaoGuaira.city : 'Guaira' }}</span>
+                </div>
+                <div class="flex items-center gap-1 mt-1">
+                  <Thermometer size="14" />
+                  <span class="text-sm font-bold text-white">{{ previsaoGuaira ? previsaoGuaira.temperature + '°' : '--°' }}</span>
+                </div>
               </div>
             </div>
           </div>
           
-          <!-- Indicadores de navegação -->
-          <div v-if="aniversariantes.length > 3"
-            class="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
-            <button 
-              v-for="i in Math.ceil(aniversariantes.length / 3)" 
-              :key="i" 
-              @click="setAniversariantePage((i-1) * 3)"
-              class="w-2 h-2 rounded-full transition-colors" 
-              :class="Math.floor(currentAniversarianteIndex / 3) === i-1 ? 'bg-white' : 'bg-zinc-500'"
-              aria-label="Navegar para página de aniversariantes">
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="border-t border-white/20 my-4 mx-4"></div>
-
-      <!-- Previsão do tempo -->
-      <div class="p-4">
-        <div class="flex gap-2 items-center">
-          <CloudSun class="text-white" />
-          <h2 class="font-bold text-lg mb-0 text-white">Previsão do Tempo</h2>
-        </div>
-        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
-          <div class="flex gap-2">
-            <div class="text-yellow-500 mr-3">
-              <div v-if="previsao">
-                <Sun v-if="previsao.description === 'céu limpo'" />
-                <CloudSun v-else-if="previsao.description === 'poucas nuvens'" />
-                <CloudSun v-else-if="previsao.description === 'nuvens dispersas'" />
-                <Cloud v-else-if="previsao.description === 'nuvens quebradas'" />
-                <Cloud v-else-if="previsao.description === 'nublado'" />
-                <CloudRain v-else-if="previsao.description === 'chuva leve'" />
-                <CloudRain v-else-if="previsao.description === 'chuva'" class="animate-bounce" />
-                <CloudLightning v-else-if="previsao.description === 'trovoadas'" />
-                <Snowflake v-else-if="previsao.description === 'neve'" />
-                <Droplet v-else-if="previsao.description === 'névoa'" />
-                <HelpCircle v-else />
-              </div>
+          <!-- Espaçador flexível -->
+          <div class="flex-grow"></div>
+          
+          <!-- Data e hora -->
+          <div class="p-3 flex-shrink-0 text-white">
+            <div class="text-xl font-semibold">{{ diaSemana }}</div>
+            <div class="text-xl">{{ dia }} de {{ mes }}</div>
+            <div class="flex items-center gap-2 text-xl">
+              <Clock size="20" />
+              {{ hora }}
             </div>
-            <span class="font-semibold text-base text-white">{{ previsao?.city }}</span>
           </div>
-          <div class="flex gap-2 mt-4">
-            <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsao?.temperature }}°</span>
-          </div>
-        </div>
-        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
-          <div class="flex gap-2">
-            <div class="text-yellow-500 mr-3">
-              <div v-if="previsaoPien">
-                <Sun v-if="previsaoPien.description === 'céu limpo'" />
-                <CloudSun v-else-if="previsaoPien.description === 'poucas nuvens'" />
-                <CloudSun v-else-if="previsaoPien.description === 'nuvens dispersas'" />
-                <Cloud v-else-if="previsaoPien.description === 'nuvens quebradas'" />
-                <Cloud v-else-if="previsaoPien.description === 'nublado'" />
-                <CloudRain v-else-if="previsaoPien.description === 'chuva leve'" />
-                <CloudRain v-else-if="previsaoPien.description === 'chuva'" class="animate-bounce" />
-                <CloudLightning v-else-if="previsaoPien.description === 'trovoadas'" />
-                <Snowflake v-else-if="previsaoPien.description === 'neve'" />
-                <Droplet v-else-if="previsaoPien.description === 'névoa'" />
-                <HelpCircle v-else />
-              </div>
-            </div>
-            <span class="font-semibold text-base text-white">{{ previsaoPien?.city }}</span>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoPien?.temperature }}°</span>
-          </div>
-        </div>
-        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
-          <div class="flex gap-2">
-            <div class="text-yellow-500 mr-3">
-              <div v-if="previsaoRioClaro">
-                <Sun v-if="previsaoRioClaro.description === 'céu limpo'" />
-                <CloudSun v-else-if="previsaoRioClaro.description === 'poucas nuvens'" />
-                <CloudSun v-else-if="previsaoRioClaro.description === 'nuvens dispersas'" />
-                <Cloud v-else-if="previsaoRioClaro.description === 'nuvens quebradas'" />
-                <Cloud v-else-if="previsaoRioClaro.description === 'nublado'" />
-                <CloudRain v-else-if="previsaoRioClaro.description === 'chuva leve'" />
-                <CloudRain v-else-if="previsaoRioClaro.description === 'chuva'" class="animate-bounce" />
-                <CloudLightning v-else-if="previsaoRioClaro.description === 'trovoadas'" />
-                <Snowflake v-else-if="previsaoRioClaro.description === 'neve'" />
-                <Droplet v-else-if="previsaoRioClaro.description === 'névoa'" />
-                <HelpCircle v-else />
-              </div>
-            </div>
-            <span class="font-semibold text-base text-white">{{ previsaoRioClaro?.city }}</span>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoRioClaro?.temperature }}°</span>
-          </div>
-        </div>
-        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
-          <div class="flex gap-2">
-            <div class="text-yellow-500 mr-3">
-              <div v-if="previsaoGuaira">
-                <Sun v-if="previsaoGuaira.description === 'céu limpo'" />
-                <CloudSun v-else-if="previsaoGuaira.description === 'poucas nuvens'" />
-                <CloudSun v-else-if="previsaoGuaira.description === 'nuvens dispersas'" />
-                <Cloud v-else-if="previsaoGuaira.description === 'nuvens quebradas'" />
-                <Cloud v-else-if="previsaoGuaira.description === 'nublado'" />
-                <CloudRain v-else-if="previsaoGuaira.description === 'chuva leve'" />
-                <CloudRain v-else-if="previsaoGuaira.description === 'chuva'" class="animate-bounce" />
-                <CloudLightning v-else-if="previsaoGuaira.description === 'trovoadas'" />
-                <Snowflake v-else-if="previsaoGuaira.description === 'neve'" />
-                <Droplet v-else-if="previsaoGuaira.description === 'névoa'" />
-                <HelpCircle v-else />
-              </div>
-            </div>
-            <span class="font-semibold text-base text-white">{{ previsaoGuaira?.city }}</span>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <Thermometer />
-            <span class="ml-4 text-base font-bold text-white">{{ previsaoGuaira?.temperature }}°</span>
-          </div>
-        </div>
-      </div>
-      <div class="mt-auto p-4 gap-1 flex flex-col rounded-lg mx-2 mb-2 text-[24px] font-semibold text-white">
-        <span>{{ diaSemana }}</span>
-        <div class="flex">
-          {{ dia }} de {{ mes }}
-        </div>
-        <div class="flex items-center gap-2">
-          <Clock />
-          {{ hora }}
-        </div>
-        <div class="flex text-4xl flex justify-center items-center gap-4 text-white mt-2 font-light">
         </div>
       </div>
     </div>
+    
     <!-- Conteúdo principal -->
     <div class="flex-1 flex flex-col">
       <!-- Área do slideshow -->
@@ -264,7 +262,7 @@ export default {
     Clock,
     Sun
   },
-  data() {
+  data: function() {
     return {
       previsao: null,
       previsaoRioClaro: null,
@@ -303,27 +301,27 @@ export default {
     };
   },
   computed: {
-    dia() {
+    dia: function() {
       return this.currentDate.getDate();
     },
-    diaSemana() {
+    diaSemana: function() {
       const diasDaSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       return diasDaSemana[this.currentDate.getDay()];
     },
-    mes() {
+    mes: function() {
       const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       return meses[this.currentDate.getMonth()];
     },
-    hora() {
+    hora: function() {
       return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   },
-  async created() {
-    await this.getEvento();
-    await this.getAniversariantes();
-    await this.fetchPrevisao();
+  created: function() {
+    this.getEvento();
+    this.getAniversariantes();
+    this.fetchPrevisao();
   },
-  mounted() {
+  mounted: function() {
     this.updateTime();
     this.intervalId = setInterval(this.updateTime, 1000);
 
@@ -345,7 +343,7 @@ export default {
       ];
     }
   },
-  beforeUnmount() {
+  beforeDestroy: function() {
     clearInterval(this.intervalId);
     this.stopSlideshow();
     this.stopNoticiaRotation();
@@ -353,7 +351,7 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    fetchPrevisao() {
+    fetchPrevisao: function() {
       return Promise.all([
         this.getPrevisaoTempoImbituba(),
         this.getPrevisaoTempoRioClaro(),
@@ -361,140 +359,140 @@ export default {
         this.getPrevisaoTempoPien()
       ]);
     },
-    async getPrevisaoTempoImbituba() {
-      try {
-        const response = await axiosInstance.get('/weather/imbituba');
-        this.previsao = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar previsão de Imbituba:", error);
-      }
+    getPrevisaoTempoImbituba: function() {
+      return axiosInstance.get('/weather/imbituba')
+        .then(response => {
+          this.previsao = response.data;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar previsão de Imbituba:", error);
+        });
     },
-    async getPrevisaoTempoRioClaro() {
-      try {
-        const response = await axiosInstance.get('/weather/rio-claro');
-        this.previsaoRioClaro = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar previsão de Rio Claro:", error);
-      }
+    getPrevisaoTempoRioClaro: function() {
+      return axiosInstance.get('/weather/rio-claro')
+        .then(response => {
+          this.previsaoRioClaro = response.data;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar previsão de Rio Claro:", error);
+        });
     },
-    async getPrevisaoTempoGuaira() {
-      try {
-        const response = await axiosInstance.get('/weather/guaira');
-        this.previsaoGuaira = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar previsão de Guaíra:", error);
-      }
+    getPrevisaoTempoGuaira: function() {
+      return axiosInstance.get('/weather/guaira')
+        .then(response => {
+          this.previsaoGuaira = response.data;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar previsão de Guaíra:", error);
+        });
     },
-    async getPrevisaoTempoPien() {
-      try {
-        const response = await axiosInstance.get('/weather/pien');
-        this.previsaoPien = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar previsão de Pien:", error);
-      }
+    getPrevisaoTempoPien: function() {
+      return axiosInstance.get('/weather/pien')
+        .then(response => {
+          this.previsaoPien = response.data;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar previsão de Pien:", error);
+        });
     },
-    updateTime() {
+    updateTime: function() {
       this.currentDate = new Date();
     },
-    async getAniversariantes() {
+    getAniversariantes: function() {
       const mesAtual = new Date().getMonth() + 1;
-      try {
-        const response = await axiosInstance.get('/aniversariantes', {
-          params: { mes: mesAtual },
+      return axiosInstance.get('/aniversariantes', {
+        params: { mes: mesAtual },
+      })
+        .then(response => {
+          this.aniversariantes = response.data;
+        })
+        .catch(error => {
+          console.error("Erro ao buscar aniversariantes:", error);
         });
-        this.aniversariantes = response.data;
-      } catch (error) {
-        console.error("Erro ao buscar aniversariantes:", error);
-      }
     },
-    async getEvento() {
-      try {
-        const response = await axiosInstance.get(`/imagens/evento/${this.idEvento}`);
-        this.fotos = response.data[0];
-      } catch (error) {
-        console.error("Erro ao buscar imagens do evento:", error);
-      }
+    getEvento: function() {
+      return axiosInstance.get(`/imagens/evento/${this.idEvento}`)
+        .then(response => {
+          this.fotos = response.data[0];
+        })
+        .catch(error => {
+          console.error("Erro ao buscar imagens do evento:", error);
+        });
     },
     // Métodos para o slideshow de imagens
-    startSlideshow() {
+    startSlideshow: function() {
       this.stopSlideshow();
-      this.timer = setInterval(() => {
-        this.nextSlide();
-      }, 5000);
+      this.timer = setInterval(this.nextSlide, 5000);
     },
-    stopSlideshow() {
+    stopSlideshow: function() {
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
     },
-    nextSlide() {
+    nextSlide: function() {
       if (this.currentIndex === this.fotos.length - 1) {
         this.getEvento();
       }
       this.currentIndex = (this.currentIndex + 1) % this.fotos.length;
     },
-    prevSlide() {
+    prevSlide: function() {
       this.currentIndex = (this.currentIndex - 1 + this.fotos.length) % this.fotos.length;
     },
-    setCurrentIndex(index) {
+    setCurrentIndex: function(index) {
       this.currentIndex = index;
       this.stopSlideshow();
       this.startSlideshow();
     },
     // Métodos para o carrossel de aniversariantes
-    startAniversarianteCarousel() {
+    startAniversarianteCarousel: function() {
       this.stopAniversarianteCarousel();
-      this.aniversarianteTimer = setInterval(() => {
-        this.nextAniversariantePage();
-      }, 5000); // Troca a cada 5 segundos
+      this.aniversarianteTimer = setInterval(this.nextAniversariantePage, 5000); // Troca a cada 5 segundos
     },
-    stopAniversarianteCarousel() {
+    stopAniversarianteCarousel: function() {
       if (this.aniversarianteTimer) {
         clearInterval(this.aniversarianteTimer);
         this.aniversarianteTimer = null;
       }
     },
-    nextAniversariantePage() {
-      if (this.aniversariantes.length <= 3) {
+    nextAniversariantePage: function() {
+      if (this.aniversariantes.length <= 2) {
         return; // Não há necessidade de rotação se todos cabem na tela
       }
       
       // Avança para o próximo aniversariante, um por um
       this.currentAniversarianteIndex = (this.currentAniversarianteIndex + 1) % this.aniversariantes.length;
     },
-    setAniversariantePage(index) {
+    setAniversariantePage: function(index) {
       this.currentAniversarianteIndex = index;
       this.stopAniversarianteCarousel();
       this.startAniversarianteCarousel();
     },
     // Outros métodos
-    toggleFullscreen() {
+    toggleFullscreen: function() {
       const elem = this.$el.querySelector('.relative');
       if (!document.fullscreenElement) {
-        elem.requestFullscreen().catch(err => {
-          console.error(`Erro ao entrar em tela cheia: ${err.message}`);
+        elem.requestFullscreen().catch(function(err) {
+          console.error("Erro ao entrar em tela cheia:", err);
         });
       } else {
         document.exitFullscreen();
       }
     },
-    handleResize() {
+    handleResize: function() {
       // Método mantido do código original
     },
-    startNoticiaRotation() {
+    startNoticiaRotation: function() {
       this.stopNoticiaRotation();
-      this.noticiaTimer = setInterval(() => {
-        this.nextNoticia();
-      }, 8000);
+      this.noticiaTimer = setInterval(this.nextNoticia, 8000);
     },
-    stopNoticiaRotation() {
+    stopNoticiaRotation: function() {
       if (this.noticiaTimer) {
         clearInterval(this.noticiaTimer);
         this.noticiaTimer = null;
       }
     },
-    nextNoticia() {
+    nextNoticia: function() {
       this.noticiaAtualIndex = (this.noticiaAtualIndex + 1) % this.noticias.length;
     }
   }
@@ -502,15 +500,22 @@ export default {
 </script>
 
 <style scoped>
+/* Largura da sidebar */
+.sidebar-width {
+  width: 16rem;
+  min-width: 16rem;
+}
+
 /* Estilos responsivos */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .flex {
     flex-direction: column;
   }
 
-  .w-64 {
+  .sidebar-width {
     width: 100%;
-    height: auto;
+    min-width: 100%;
+    max-height: 40vh;
   }
 }
 
@@ -521,7 +526,6 @@ export default {
   justify-content: center;
   background-color: #000;
   max-height: calc(100vh - 80px);
-  /* Altura total menos a altura da barra de notícias */
 }
 
 /* Manter proporção 16:9 (1920x1080) */
@@ -534,18 +538,6 @@ export default {
   aspect-ratio: 16/9;
 }
 
-/* Estilos para telas maiores */
-@media (min-width: 1024px) {
-  .flex-1.relative {
-    height: calc(100vh - 80px);
-  }
-
-  .w-64 {
-    min-width: 16rem;
-    max-width: 16rem;
-  }
-}
-
 /* Melhorias visuais */
 .bg-white\/10 {
   background-color: rgba(255, 255, 255, 0.1);
@@ -556,10 +548,17 @@ export default {
 }
 
 /* Estilos para o carrossel de aniversariantes */
-.relative.h-\[200px\] {
+.relative.h-\[120px\] {
   overflow: hidden;
   mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,1) 70%, 
+    rgba(0,0,0,1) 80%, 
     rgba(0,0,0,0));
+}
+
+/* Truncar texto longo */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
