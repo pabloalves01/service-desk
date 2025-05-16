@@ -56,6 +56,78 @@
             <span class="ml-4 text-base font-bold text-white">{{ previsao.temperature }}°</span>
           </div>
         </div>
+        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
+          <div class="flex gap-2">
+            <div class="text-yellow-500 mr-3">
+              <div v-if="previsaoPien">
+                <Sun v-if="previsaoPien.description === 'céu limpo'" />
+                <CloudSun v-else-if="previsaoPien.description === 'poucas nuvens'" />
+                <CloudSun v-else-if="previsaoPien.description === 'nuvens dispersas'" />
+                <Cloud v-else-if="previsaoPien.description === 'nuvens quebradas'" />
+                <Cloud v-else-if="previsaoPien.description === 'nublado'" />
+                <CloudRain v-else-if="previsaoPien.description === 'chuva leve'" />
+                <CloudRain v-else-if="previsaoPien.description === 'chuva'" class="animate-bounce" />
+                <CloudLightning v-else-if="previsaoPien.description === 'trovoadas'" />
+                <Snowflake v-else-if="previsaoPien.description === 'neve'" />
+                <Droplet v-else-if="previsaoPien.description === 'névoa'" />
+                <HelpCircle v-else />
+              </div>
+            </div>
+            <span class="font-semibold text-base text-white">{{ previsaoPien.city }}</span>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <Thermometer />
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoPien.temperature }}°</span>
+          </div>
+        </div>
+         <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
+          <div class="flex gap-2">
+            <div class="text-yellow-500 mr-3">
+              <div v-if="previsaoRioClaro">
+                <Sun v-if="previsaoRioClaro.description === 'céu limpo'" />
+                <CloudSun v-else-if="previsaoRioClaro.description === 'poucas nuvens'" />
+                <CloudSun v-else-if="previsaoRioClaro.description === 'nuvens dispersas'" />
+                <Cloud v-else-if="previsaoRioClaro.description === 'nuvens quebradas'" />
+                <Cloud v-else-if="previsaoRioClaro.description === 'nublado'" />
+                <CloudRain v-else-if="previsaoRioClaro.description === 'chuva leve'" />
+                <CloudRain v-else-if="previsaoRioClaro.description === 'chuva'" class="animate-bounce" />
+                <CloudLightning v-else-if="previsaoRioClaro.description === 'trovoadas'" />
+                <Snowflake v-else-if="previsaoRioClaro.description === 'neve'" />
+                <Droplet v-else-if="previsaoRioClaro.description === 'névoa'" />
+                <HelpCircle v-else />
+              </div>
+            </div>
+            <span class="font-semibold text-base text-white">{{ previsaoRioClaro.city }}</span>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <Thermometer />
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoRioClaro.temperature }}°</span>
+          </div>
+        </div>
+        <div class="flex flex-col bg-white/10 p-3 rounded-md mt-3">
+          <div class="flex gap-2">
+            <div class="text-yellow-500 mr-3">
+              <div v-if="previsaoGuaira">
+                <Sun v-if="previsaoGuaira.description === 'céu limpo'" />
+                <CloudSun v-else-if="previsaoGuaira.description === 'poucas nuvens'" />
+                <CloudSun v-else-if="previsaoGuaira.description === 'nuvens dispersas'" />
+                <Cloud v-else-if="previsaoGuaira.description === 'nuvens quebradas'" />
+                <Cloud v-else-if="previsaoGuaira.description === 'nublado'" />
+                <CloudRain v-else-if="previsaoGuaira.description === 'chuva leve'" />
+                <CloudRain v-else-if="previsaoGuaira.description === 'chuva'" class="animate-bounce" />
+                <CloudLightning v-else-if="previsaoGuaira.description === 'trovoadas'" />
+                <Snowflake v-else-if="previsaoGuaira.description === 'neve'" />
+                <Droplet v-else-if="previsaoGuaira.description === 'névoa'" />
+                <HelpCircle v-else />
+              </div>
+            </div>
+            <span class="font-semibold text-base text-white">{{ previsaoGuaira.city }}</span>
+          </div>
+          <div class="flex gap-2 mt-4">
+            <Thermometer />
+            <span class="ml-4 text-base font-bold text-white">{{ previsaoGuaira.temperature }}°</span>
+          </div>
+        </div>
       </div>
       <div class="mt-auto p-4 gap-1 flex flex-col rounded-lg mx-2 mb-2 text-[24px] font-semibold">
         <span >{{ diaSemana }}</span>
@@ -160,7 +232,7 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer, Clock } from 'lucide-vue-next';
+import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer, Clock, Sun } from 'lucide-vue-next';
 
 export default {
   components: {
@@ -174,11 +246,15 @@ export default {
     Droplet,
     HelpCircle,
     Thermometer,
-    Clock
+    Clock,
+    Sun
   },
   data() {
     return {
       previsao: null,
+      previsaoRioClaro: null,
+      previsaoGuaira: null,
+      previsaoPien: null,
       fotos: [],
       idEvento: this.$route.params.id,
       currentIndex: 0,
@@ -213,7 +289,7 @@ export default {
   async created() {
     await this.getEvento();
     await this.getAniversariantes();
-    await this.getPrevisaoTempo();
+    await this.fetchPrevisao();
   },
   mounted() {
     this.updateTime();
@@ -246,9 +322,35 @@ export default {
     }
   },
   methods: {
-    async getPrevisaoTempo() {
+    fetchPrevisao() {
+      return Promise.all([
+        this.getPrevisaoTempoImbituba(),
+        this.getPrevisaoTempoRioClaro(),
+        this.getPrevisaoTempoGuaira(),
+        this.getPrevisaoTempoPien()
+      ]);
+    },
+    async getPrevisaoTempoImbituba() {
       const response = await axiosInstance.get('/weather/imbituba');
       this.previsao = response.data;
+
+      console.log(response);
+    },
+    async getPrevisaoTempoRioClaro() {
+      const response = await axiosInstance.get('/weather/rio-claro');
+      this.previsaoRioClaro = response.data;
+
+      console.log(response);
+    },
+    async getPrevisaoTempoGuaira() {
+      const response = await axiosInstance.get('/weather/guaira');
+      this.previsaoGuaira = response.data;
+
+      console.log(response);
+    },
+    async getPrevisaoTempoPien() {
+      const response = await axiosInstance.get('/weather/pien');
+      this.previsaoPien = response.data;
 
       console.log(response);
     },

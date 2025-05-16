@@ -28,7 +28,10 @@ Route::get('/aniversariantes', [SlideshowController::class, 'getAniversariantes'
 Route::post('/aniversariante', [AniversariantesController::class, 'store']);
 Route::get('/aniversariante', [AniversariantesController::class, 'index']);
 
-Route::get('/weather/imbituba', [WeatherController::class, 'index']);
+Route::get('/weather/imbituba', [WeatherController::class, 'Imbituba']);
+Route::get('/weather/rio-claro', [WeatherController::class, 'RioClaro']);
+Route::get('/weather/guaira', [WeatherController::class, 'Guaira']);
+Route::get('/weather/pien', [WeatherController::class, 'Pien']);
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API Laravel funcionando!']);
