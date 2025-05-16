@@ -14,7 +14,7 @@
         <div class="flex flex-col flex-grow overflow-hidden">
           <!-- Aniversariantes -->
           <div class="p-3 flex-shrink-0">
-            <div class="flex gap-2 items-center mb-2">
+            <div class="flex gap-2 items-center mb-3">
               <Cake class="text-white" />
               <h2 class="font-bold text-lg text-white">Aniversariantes</h2>
             </div>
@@ -22,11 +22,11 @@
             <!-- Seção adaptativa de aniversariantes -->
             <div class="relative" :class="aniversariantesContainerClass">
               <!-- Quando há 5 ou menos aniversariantes, mostra todos -->
-              <div v-if="aniversariantes.length <= 5" class="space-y-2">
+              <div v-if="aniversariantes.length <= 5" class="space-y-3">
                 <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
-                  class="flex items-start bg-white/10 p-2 rounded-md">
-                  <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
-                  <div class="overflow-hidden">
+                  class="flex items-start bg-white/10 p-3 rounded-md aniversariante-item">
+                  <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                  <div class="overflow-hidden flex-1">
                     <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
                     <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
                   </div>
@@ -34,120 +34,136 @@
               </div>
               
               <!-- Quando há mais de 5 aniversariantes, usa carrossel -->
-              <div v-else class="space-y-2 transition-transform duration-500" 
-                :style="{ transform: `translateY(-${currentAniversarianteIndex * 60}px)` }">
+              <div v-else class="space-y-3 transition-transform duration-500" 
+                :style="{ transform: `translateY(-${currentAniversarianteIndex * aniversarianteItemHeight}px)` }">
                 <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
-                  class="flex items-start bg-white/10 p-2 rounded-md">
-                  <span class="text-sm font-black mt-0.5 mr-2 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
-                  <div class="overflow-hidden">
+                  class="flex items-start bg-white/10 p-3 rounded-md aniversariante-item">
+                  <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                  <div class="overflow-hidden flex-1">
                     <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
                     <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
                   </div>
                 </div>
               </div>
               
-              <!-- Indicadores de navegação (apenas quando há mais de 5 aniversariantes) -->
-              <div v-if="aniversariantes.length > 5"
-                class="absolute bottom-0 left-0 right-0 flex justify-center gap-1 pb-1">
-                <button 
-                  v-for="i in Math.ceil(aniversariantes.length / 5)" 
-                  :key="i" 
-                  @click="setAniversariantePage((i-1) * 5)"
-                  class="w-1.5 h-1.5 rounded-full transition-colors" 
-                  :class="Math.floor(currentAniversarianteIndex / 5) === i-1 ? 'bg-white' : 'bg-zinc-500'"
-                  aria-label="Navegar para página de aniversariantes">
+              <!-- Controles de navegação para o carrossel -->
+              <div v-if="aniversariantes.length > 5" 
+                class="absolute bottom-0 left-0 right-0 flex justify-between items-center px-2 py-1 bg-gradient-to-t from-[#011E41] to-transparent">
+                <!-- Botões de navegação -->
+                <button @click="prevAniversariantePage" 
+                  class="text-white/70 hover:text-white focus:outline-none transition-colors"
+                  aria-label="Aniversariantes anteriores">
+                  <ChevronUp size="16" />
+                </button>
+                
+                <!-- Indicadores -->
+                <div class="flex justify-center gap-1">
+                  <button 
+                    v-for="i in Math.ceil(aniversariantes.length / 5)" 
+                    :key="i" 
+                    @click="setAniversariantePage((i-1) * 5)"
+                    class="w-1.5 h-1.5 rounded-full transition-colors" 
+                    :class="Math.floor(currentAniversarianteIndex / 5) === i-1 ? 'bg-white' : 'bg-zinc-500'"
+                    aria-label="Navegar para página de aniversariantes">
+                  </button>
+                </div>
+                
+                <button @click="nextAniversariantePage" 
+                  class="text-white/70 hover:text-white focus:outline-none transition-colors"
+                  aria-label="Próximos aniversariantes">
+                  <ChevronDown size="16" />
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="border-t border-white/20 my-2 mx-3"></div>
+          <div class="border-t border-white/20 my-3 mx-3"></div>
 
           <!-- Previsão do tempo - Versão compacta -->
           <div class="p-3 flex-shrink-0 overflow-hidden">
-            <div class="flex gap-2 items-center mb-2">
+            <div class="flex gap-2 items-center mb-3">
               <CloudSun class="text-white" />
               <h2 class="font-bold text-lg text-white">Previsão do Tempo</h2>
             </div>
             
             <!-- Grid para previsões do tempo -->
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-3">
               <!-- Imbituba -->
-              <div class="flex flex-col bg-white/10 p-2 rounded-md">
-                <div class="flex items-center gap-1">
+              <div class="flex flex-col bg-white/10 p-3 rounded-md">
+                <div class="flex items-center gap-2">
                   <div class="text-yellow-500 mr-1">
                     <div v-if="previsao">
-                      <Sun v-if="previsao.description === 'céu limpo'" size="16" />
-                      <CloudSun v-else-if="previsao.description === 'poucas nuvens'" size="16" />
-                      <Cloud v-else-if="previsao.description === 'nublado'" size="16" />
-                      <CloudRain v-else-if="previsao.description === 'chuva'" size="16" />
-                      <HelpCircle v-else size="16" />
+                      <Sun v-if="previsao.description === 'céu limpo'" size="18" />
+                      <CloudSun v-else-if="previsao.description === 'poucas nuvens'" size="18" />
+                      <Cloud v-else-if="previsao.description === 'nublado'" size="18" />
+                      <CloudRain v-else-if="previsao.description === 'chuva'" size="18" />
+                      <HelpCircle v-else size="18" />
                     </div>
                   </div>
                   <span class="font-semibold text-sm text-white truncate">{{ previsao ? previsao.city : 'Imbituba' }}</span>
                 </div>
-                <div class="flex items-center gap-1 mt-1">
-                  <Thermometer size="14" />
+                <div class="flex items-center gap-2 mt-2">
+                  <Thermometer size="16" />
                   <span class="text-sm font-bold text-white">{{ previsao ? previsao.temperature + '°' : '--°' }}</span>
                 </div>
               </div>
               
               <!-- Pien -->
-              <div class="flex flex-col bg-white/10 p-2 rounded-md">
-                <div class="flex items-center gap-1">
+              <div class="flex flex-col bg-white/10 p-3 rounded-md">
+                <div class="flex items-center gap-2">
                   <div class="text-yellow-500 mr-1">
                     <div v-if="previsaoPien">
-                      <Sun v-if="previsaoPien.description === 'céu limpo'" size="16" />
-                      <CloudSun v-else-if="previsaoPien.description === 'poucas nuvens'" size="16" />
-                      <Cloud v-else-if="previsaoPien.description === 'nublado'" size="16" />
-                      <CloudRain v-else-if="previsaoPien.description === 'chuva'" size="16" />
-                      <HelpCircle v-else size="16" />
+                      <Sun v-if="previsaoPien.description === 'céu limpo'" size="18" />
+                      <CloudSun v-else-if="previsaoPien.description === 'poucas nuvens'" size="18" />
+                      <Cloud v-else-if="previsaoPien.description === 'nublado'" size="18" />
+                      <CloudRain v-else-if="previsaoPien.description === 'chuva'" size="18" />
+                      <HelpCircle v-else size="18" />
                     </div>
                   </div>
                   <span class="font-semibold text-sm text-white truncate">{{ previsaoPien ? previsaoPien.city : 'Pien' }}</span>
                 </div>
-                <div class="flex items-center gap-1 mt-1">
-                  <Thermometer size="14" />
+                <div class="flex items-center gap-2 mt-2">
+                  <Thermometer size="16" />
                   <span class="text-sm font-bold text-white">{{ previsaoPien ? previsaoPien.temperature + '°' : '--°' }}</span>
                 </div>
               </div>
               
               <!-- Rio Claro -->
-              <div class="flex flex-col bg-white/10 p-2 rounded-md">
-                <div class="flex items-center gap-1">
+              <div class="flex flex-col bg-white/10 p-3 rounded-md">
+                <div class="flex items-center gap-2">
                   <div class="text-yellow-500 mr-1">
                     <div v-if="previsaoRioClaro">
-                      <Sun v-if="previsaoRioClaro.description === 'céu limpo'" size="16" />
-                      <CloudSun v-else-if="previsaoRioClaro.description === 'poucas nuvens'" size="16" />
-                      <Cloud v-else-if="previsaoRioClaro.description === 'nublado'" size="16" />
-                      <CloudRain v-else-if="previsaoRioClaro.description === 'chuva'" size="16" />
-                      <HelpCircle v-else size="16" />
+                      <Sun v-if="previsaoRioClaro.description === 'céu limpo'" size="18" />
+                      <CloudSun v-else-if="previsaoRioClaro.description === 'poucas nuvens'" size="18" />
+                      <Cloud v-else-if="previsaoRioClaro.description === 'nublado'" size="18" />
+                      <CloudRain v-else-if="previsaoRioClaro.description === 'chuva'" size="18" />
+                      <HelpCircle v-else size="18" />
                     </div>
                   </div>
                   <span class="font-semibold text-sm text-white truncate">{{ previsaoRioClaro ? previsaoRioClaro.city : 'Rio Claro' }}</span>
                 </div>
-                <div class="flex items-center gap-1 mt-1">
-                  <Thermometer size="14" />
+                <div class="flex items-center gap-2 mt-2">
+                  <Thermometer size="16" />
                   <span class="text-sm font-bold text-white">{{ previsaoRioClaro ? previsaoRioClaro.temperature + '°' : '--°' }}</span>
                 </div>
               </div>
               
               <!-- Guaira -->
-              <div class="flex flex-col bg-white/10 p-2 rounded-md">
-                <div class="flex items-center gap-1">
+              <div class="flex flex-col bg-white/10 p-3 rounded-md">
+                <div class="flex items-center gap-2">
                   <div class="text-yellow-500 mr-1">
                     <div v-if="previsaoGuaira">
-                      <Sun v-if="previsaoGuaira.description === 'céu limpo'" size="16" />
-                      <CloudSun v-else-if="previsaoGuaira.description === 'poucas nuvens'" size="16" />
-                      <Cloud v-else-if="previsaoGuaira.description === 'nublado'" size="16" />
-                      <CloudRain v-else-if="previsaoGuaira.description === 'chuva'" size="16" />
-                      <HelpCircle v-else size="16" />
+                      <Sun v-if="previsaoGuaira.description === 'céu limpo'" size="18" />
+                      <CloudSun v-else-if="previsaoGuaira.description === 'poucas nuvens'" size="18" />
+                      <Cloud v-else-if="previsaoGuaira.description === 'nublado'" size="18" />
+                      <CloudRain v-else-if="previsaoGuaira.description === 'chuva'" size="18" />
+                      <HelpCircle v-else size="18" />
                     </div>
                   </div>
                   <span class="font-semibold text-sm text-white truncate">{{ previsaoGuaira ? previsaoGuaira.city : 'Guaira' }}</span>
                 </div>
-                <div class="flex items-center gap-1 mt-1">
-                  <Thermometer size="14" />
+                <div class="flex items-center gap-2 mt-2">
+                  <Thermometer size="16" />
                   <span class="text-sm font-bold text-white">{{ previsaoGuaira ? previsaoGuaira.temperature + '°' : '--°' }}</span>
                 </div>
               </div>
@@ -158,10 +174,10 @@
           <div class="flex-grow"></div>
           
           <!-- Data e hora -->
-          <div class="p-3 flex-shrink-0 text-white">
+          <div class="p-4 flex-shrink-0 text-white border-t border-white/10">
             <div class="text-xl font-semibold">{{ diaSemana }}</div>
-            <div class="text-xl">{{ dia }} de {{ mes }}</div>
-            <div class="flex items-center gap-2 text-xl">
+            <div class="text-xl mt-1">{{ dia }} de {{ mes }}</div>
+            <div class="flex items-center gap-2 text-xl mt-1">
               <Clock size="20" />
               {{ hora }}
             </div>
@@ -258,7 +274,22 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { Fullscreen, Cake, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, Droplet, HelpCircle, Thermometer, Clock, Sun } from 'lucide-vue-next';
+import { 
+  Fullscreen, 
+  Cake, 
+  CloudSun, 
+  Cloud, 
+  CloudRain, 
+  CloudLightning, 
+  Snowflake, 
+  Droplet, 
+  HelpCircle, 
+  Thermometer, 
+  Clock, 
+  Sun,
+  ChevronUp,
+  ChevronDown
+} from 'lucide-vue-next';
 
 export default {
   components: {
@@ -273,7 +304,9 @@ export default {
     HelpCircle,
     Thermometer,
     Clock,
-    Sun
+    Sun,
+    ChevronUp,
+    ChevronDown
   },
   data: function() {
     return {
@@ -292,6 +325,8 @@ export default {
       aniversariantes: [],
       currentAniversarianteIndex: 0,
       aniversarianteTimer: null,
+      aniversarianteItemHeight: 64, // Altura de cada item em pixels
+      isHoveringAniversariantes: false, // Para pausar o carrossel quando o mouse estiver sobre ele
       
       currentDate: new Date(),
       temperatura: 26,
@@ -332,7 +367,8 @@ export default {
     aniversariantesContainerClass: function() {
       // Se tiver 5 ou menos aniversariantes, altura fixa baseada no número de itens
       if (this.aniversariantes.length <= 5) {
-        return 'h-auto max-h-[320px] overflow-hidden';
+        const height = Math.min(this.aniversariantes.length * this.aniversarianteItemHeight, 320);
+        return 'h-auto max-h-[' + height + 'px] overflow-hidden';
       } 
       // Se tiver mais de 5, altura fixa para mostrar 5 itens e overflow hidden para o carrossel
       else {
@@ -368,6 +404,11 @@ export default {
     // Inicia o carrossel apenas se houver mais de 5 aniversariantes
     this.startAniversarianteCarouselIfNeeded();
     
+    // Detectar tamanho real dos itens após renderização
+    this.$nextTick(function() {
+      this.calcularAlturaItemAniversariante();
+    });
+    
     window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy: function() {
@@ -381,9 +422,24 @@ export default {
     // Observa mudanças na lista de aniversariantes para iniciar ou parar o carrossel conforme necessário
     aniversariantes: function() {
       this.startAniversarianteCarouselIfNeeded();
+      this.$nextTick(function() {
+        this.calcularAlturaItemAniversariante();
+      });
     }
   },
   methods: {
+    // Calcula a altura real de um item de aniversariante para usar no carrossel
+    calcularAlturaItemAniversariante: function() {
+      const items = this.$el.querySelectorAll('.aniversariante-item');
+      if (items && items.length > 0) {
+        // Pega a altura do primeiro item + margem
+        const firstItem = items[0];
+        const style = window.getComputedStyle(firstItem);
+        const marginBottom = parseInt(style.marginBottom) || 12; // 12px é o valor padrão para space-y-3
+        
+        this.aniversarianteItemHeight = firstItem.offsetHeight + marginBottom;
+      }
+    },
     fetchPrevisao: function() {
       return Promise.all([
         this.getPrevisaoTempoImbituba(),
@@ -497,12 +553,20 @@ export default {
       }
     },
     nextAniversariantePage: function() {
-      if (this.aniversariantes.length <= 5) {
-        return; // Não há necessidade de rotação se todos cabem na tela
+      if (this.aniversariantes.length <= 5 || this.isHoveringAniversariantes) {
+        return; // Não há necessidade de rotação se todos cabem na tela ou se o mouse estiver sobre o carrossel
       }
       
       // Avança para o próximo aniversariante, um por um
       this.currentAniversarianteIndex = (this.currentAniversarianteIndex + 1) % this.aniversariantes.length;
+    },
+    prevAniversariantePage: function() {
+      if (this.aniversariantes.length <= 5) {
+        return;
+      }
+      
+      // Volta para o aniversariante anterior
+      this.currentAniversarianteIndex = (this.currentAniversarianteIndex - 1 + this.aniversariantes.length) % this.aniversariantes.length;
     },
     setAniversariantePage: function(index) {
       this.currentAniversarianteIndex = index;
@@ -521,7 +585,8 @@ export default {
       }
     },
     handleResize: function() {
-      // Método mantido do código original
+      // Recalcular altura dos itens quando a janela for redimensionada
+      this.calcularAlturaItemAniversariante();
     },
     startNoticiaRotation: function() {
       this.stopNoticiaRotation();
@@ -557,6 +622,19 @@ export default {
     width: 100%;
     min-width: 100%;
     max-height: 40vh;
+  }
+}
+
+/* Telas grandes e TVs */
+@media (min-width: 1920px) {
+  .sidebar-width {
+    width: 20rem;
+    min-width: 20rem;
+  }
+  
+  .aniversariante-item {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
   }
 }
 
@@ -598,7 +676,22 @@ export default {
 /* Efeito de máscara para o carrossel */
 .h-\[320px\] {
   mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,1) 90%, 
-    rgba(0,0,0,0));
+    rgba(0,0,0,1) 85%, 
+    rgba(0,0,0,0.3));
+}
+
+/* Espaçamento consistente para aniversariantes */
+.aniversariante-item {
+  margin-bottom: 0.75rem;
+}
+
+/* Último item sem margem inferior */
+.aniversariante-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Efeito de hover para pausar o carrossel */
+.space-y-3:hover {
+  cursor: pointer;
 }
 </style>
