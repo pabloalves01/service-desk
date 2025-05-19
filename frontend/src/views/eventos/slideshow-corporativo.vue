@@ -20,57 +20,56 @@
                 <Cake class="text-white" />
                 <h2 class="font-bold text-lg text-white">Aniversariantes</h2>
               </div>
-              
+
               <!-- Seção adaptativa de aniversariantes com altura fixa -->
               <div class="relative aniversariantes-container">
                 <!-- Quando há 5 ou menos aniversariantes, mostra todos -->
                 <div v-if="aniversariantes.length <= 5" class="space-y-3">
                   <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
                     class="flex items-start bg-white/10 p-3 rounded-md aniversariante-item">
-                    <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                    <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{
+                      aniversariante.dia }}</span>
                     <div class="overflow-hidden flex-1">
                       <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
                       <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Quando há mais de 5 aniversariantes, usa carrossel -->
-                <div v-else class="space-y-3 transition-transform duration-500" 
+                <div v-else class="space-y-3 transition-transform duration-500"
                   :style="{ transform: `translateY(-${currentAniversarianteIndex * aniversarianteItemHeight}px)` }">
                   <div v-for="(aniversariante, index) in aniversariantes" :key="index || aniversariante.id"
                     class="flex items-start bg-white/10 p-3 rounded-md aniversariante-item">
-                    <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{ aniversariante.dia }}</span>
+                    <span class="text-sm font-black mt-0.5 mr-3 bg-[#D11D20] text-white px-2 py-1 rounded">{{
+                      aniversariante.dia }}</span>
                     <div class="overflow-hidden flex-1">
                       <div class="font-semibold text-white text-sm truncate">{{ aniversariante.nome }}</div>
                       <div class="text-xs text-gray-300 truncate">{{ aniversariante.departamento }}</div>
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Controles de navegação para o carrossel -->
-                <div v-if="aniversariantes.length > 5" 
+                <div v-if="aniversariantes.length > 5"
                   class="absolute bottom-0 left-0 right-0 flex justify-between items-center px-2 py-1 bg-gradient-to-t from-[#011E41] to-transparent">
                   <!-- Botões de navegação -->
-                  <button @click="prevAniversariantePage" 
+                  <button @click="prevAniversariantePage"
                     class="text-white/70 hover:text-white focus:outline-none transition-colors"
                     aria-label="Aniversariantes anteriores">
                     <ChevronUp size="16" />
                   </button>
-                  
+
                   <!-- Indicadores -->
                   <div class="flex justify-center gap-1">
-                    <button 
-                      v-for="i in Math.ceil(aniversariantes.length / 5)" 
-                      :key="i" 
-                      @click="setAniversariantePage((i-1) * 5)"
-                      class="w-1.5 h-1.5 rounded-full transition-colors" 
-                      :class="Math.floor(currentAniversarianteIndex / 5) === i-1 ? 'bg-white' : 'bg-zinc-500'"
+                    <button v-for="i in Math.ceil(aniversariantes.length / 5)" :key="i"
+                      @click="setAniversariantePage((i - 1) * 5)" class="w-1.5 h-1.5 rounded-full transition-colors"
+                      :class="Math.floor(currentAniversarianteIndex / 5) === i - 1 ? 'bg-white' : 'bg-zinc-500'"
                       aria-label="Navegar para página de aniversariantes">
                     </button>
                   </div>
-                  
-                  <button @click="nextAniversariantePage" 
+
+                  <button @click="nextAniversariantePage"
                     class="text-white/70 hover:text-white focus:outline-none transition-colors"
                     aria-label="Próximos aniversariantes">
                     <ChevronDown size="16" />
@@ -90,7 +89,7 @@
                 <CloudSun class="text-white" />
                 <h2 class="font-bold text-lg text-white">Previsão do Tempo</h2>
               </div>
-              
+
               <!-- Grid para previsões do tempo -->
               <div class="grid grid-cols-2 gap-3">
                 <!-- Imbituba -->
@@ -105,14 +104,17 @@
                         <HelpCircle v-else size="18" />
                       </div>
                     </div>
-                    <span class="font-semibold text-sm text-white truncate">{{ previsao ? previsao.city : 'Imbituba' }}</span>
+                    <span class="font-semibold text-sm text-white truncate">{{ previsao ? previsao.city : 'Imbituba'
+                      }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsao ? previsao.temperature + '°' : '--°' }}</span>
+                    <span class="text-sm font-bold text-white">
+                      {{ previsao ? Math.round(previsao.temperature) + '°' : '--°' }}
+                    </span>
                   </div>
                 </div>
-                
+
                 <!-- Pien -->
                 <div class="flex flex-col bg-white/10 p-3 rounded-md">
                   <div class="flex items-center gap-2">
@@ -125,14 +127,16 @@
                         <HelpCircle v-else size="18" />
                       </div>
                     </div>
-                    <span class="font-semibold text-sm text-white truncate">{{ previsaoPien ? previsaoPien.city : 'Pien' }}</span>
+                    <span class="font-semibold text-sm text-white truncate">{{ previsaoPien ? previsaoPien.city : 'Pien'
+                      }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoPien ? previsaoPien.temperature + '°' : '--°' }}</span>
+                    <span class="text-sm font-bold text-white">{{ previsaoPien ?  Math.floor(previsaoPien.temperature) + '°' : '--°'
+                      }}</span>
                   </div>
                 </div>
-                
+
                 <!-- Rio Claro -->
                 <div class="flex flex-col bg-white/10 p-3 rounded-md">
                   <div class="flex items-center gap-2">
@@ -145,14 +149,16 @@
                         <HelpCircle v-else size="18" />
                       </div>
                     </div>
-                    <span class="font-semibold text-sm text-white truncate">{{ previsaoRioClaro ? previsaoRioClaro.city : 'Rio Claro' }}</span>
+                    <span class="font-semibold text-sm text-white truncate">{{ previsaoRioClaro ? previsaoRioClaro.city
+                      : 'Rio Claro' }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoRioClaro ? previsaoRioClaro.temperature + '°' : '--°' }}</span>
+                    <span class="text-sm font-bold text-white">{{ previsaoRioClaro ?  Math.floor(previsaoRioClaro.temperature) + '°'
+                      : '--°' }}</span>
                   </div>
                 </div>
-                
+
                 <!-- Guaira -->
                 <div class="flex flex-col bg-white/10 p-3 rounded-md">
                   <div class="flex items-center gap-2">
@@ -165,19 +171,21 @@
                         <HelpCircle v-else size="18" />
                       </div>
                     </div>
-                    <span class="font-semibold text-sm text-white truncate">{{ previsaoGuaira ? previsaoGuaira.city : 'Guaira' }}</span>
+                    <span class="font-semibold text-sm text-white truncate">{{ previsaoGuaira ? previsaoGuaira.city :
+                      'Guaira' }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoGuaira ? previsaoGuaira.temperature + '°' : '--°' }}</span>
+                    <span class="text-sm font-bold text-white">{{ previsaoGuaira ?  Math.floor(previsaoGuaira.temperature) + '°' :
+                      '--°' }}</span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <!-- Espaçador flexível -->
             <div class="flex-grow"></div>
-            
+
             <!-- Data e hora -->
             <div class="p-4 flex-shrink-0 text-white border-t border-white/10">
               <div class="text-xl font-semibold">{{ diaSemana }}</div>
@@ -191,7 +199,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Conteúdo principal -->
     <div class="flex-1 flex flex-col">
       <!-- Área do slideshow -->
@@ -280,18 +288,18 @@
 
 <script>
 import axiosInstance from '../../axios';
-import { 
-  Fullscreen, 
-  Cake, 
-  CloudSun, 
-  Cloud, 
-  CloudRain, 
-  CloudLightning, 
-  Snowflake, 
-  Droplet, 
-  HelpCircle, 
-  Thermometer, 
-  Clock, 
+import {
+  Fullscreen,
+  Cake,
+  CloudSun,
+  Cloud,
+  CloudRain,
+  CloudLightning,
+  Snowflake,
+  Droplet,
+  HelpCircle,
+  Thermometer,
+  Clock,
   Sun,
   ChevronUp,
   ChevronDown
@@ -314,7 +322,7 @@ export default {
     ChevronUp,
     ChevronDown
   },
-  data: function() {
+  data: function () {
     return {
       previsao: null,
       previsaoRioClaro: null,
@@ -326,14 +334,14 @@ export default {
       timer: null,
       noticiaAtualIndex: 0,
       noticiaTimer: null,
-      
+
       // Dados para o carrossel de aniversariantes
       aniversariantes: [],
       currentAniversarianteIndex: 0,
       aniversarianteTimer: null,
       aniversarianteItemHeight: 64, // Altura de cada item em pixels
       isHoveringAniversariantes: false, // Para pausar o carrossel quando o mouse estiver sobre ele
-      
+
       currentDate: new Date(),
       temperatura: 26,
 
@@ -355,33 +363,33 @@ export default {
     };
   },
   computed: {
-    dia: function() {
+    dia: function () {
       return this.currentDate.getDate();
     },
-    diaSemana: function() {
+    diaSemana: function () {
       const diasDaSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       return diasDaSemana[this.currentDate.getDay()];
     },
-    mes: function() {
+    mes: function () {
       const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
       return meses[this.currentDate.getMonth()];
     },
-    hora: function() {
+    hora: function () {
       return this.currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   },
-  created: function() {
+  created: function () {
     this.getEvento();
     this.getAniversariantes();
     this.fetchPrevisao();
   },
-  mounted: function() {
+  mounted: function () {
     this.updateTime();
     this.intervalId = setInterval(this.updateTime, 1000);
 
     this.startSlideshow();
     this.startNoticiaRotation();
-    
+
     // Adicionar dados de teste para aniversariantes se estiver vazio
     if (this.aniversariantes.length === 0) {
       this.aniversariantes = [
@@ -394,18 +402,18 @@ export default {
         { id: 7, dia: '28', nome: 'Roberto Alves', departamento: 'Logística' }
       ];
     }
-    
+
     // Inicia o carrossel apenas se houver mais de 5 aniversariantes
     this.startAniversarianteCarouselIfNeeded();
-    
+
     // Detectar tamanho real dos itens após renderização
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       this.calcularAlturaItemAniversariante();
     });
-    
+
     window.addEventListener('resize', this.handleResize);
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     clearInterval(this.intervalId);
     this.stopSlideshow();
     this.stopNoticiaRotation();
@@ -414,27 +422,27 @@ export default {
   },
   watch: {
     // Observa mudanças na lista de aniversariantes para iniciar ou parar o carrossel conforme necessário
-    aniversariantes: function() {
+    aniversariantes: function () {
       this.startAniversarianteCarouselIfNeeded();
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         this.calcularAlturaItemAniversariante();
       });
     }
   },
   methods: {
     // Calcula a altura real de um item de aniversariante para usar no carrossel
-    calcularAlturaItemAniversariante: function() {
+    calcularAlturaItemAniversariante: function () {
       const items = this.$el.querySelectorAll('.aniversariante-item');
       if (items && items.length > 0) {
         // Pega a altura do primeiro item + margem
         const firstItem = items[0];
         const style = window.getComputedStyle(firstItem);
         const marginBottom = parseInt(style.marginBottom) || 12; // 12px é o valor padrão para space-y-3
-        
+
         this.aniversarianteItemHeight = firstItem.offsetHeight + marginBottom;
       }
     },
-    fetchPrevisao: function() {
+    fetchPrevisao: function () {
       return Promise.all([
         this.getPrevisaoTempoImbituba(),
         this.getPrevisaoTempoRioClaro(),
@@ -442,93 +450,93 @@ export default {
         this.getPrevisaoTempoPien()
       ]);
     },
-    getPrevisaoTempoImbituba: function() {
+    getPrevisaoTempoImbituba: function () {
       return axiosInstance.get('/weather/imbituba')
-        .then(function(response) {
+        .then(function (response) {
           this.previsao = response.data;
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar previsão de Imbituba:", error);
         });
     },
-    getPrevisaoTempoRioClaro: function() {
+    getPrevisaoTempoRioClaro: function () {
       return axiosInstance.get('/weather/rio-claro')
-        .then(function(response) {
+        .then(function (response) {
           this.previsaoRioClaro = response.data;
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar previsão de Rio Claro:", error);
         });
     },
-    getPrevisaoTempoGuaira: function() {
+    getPrevisaoTempoGuaira: function () {
       return axiosInstance.get('/weather/guaira')
-        .then(function(response) {
+        .then(function (response) {
           this.previsaoGuaira = response.data;
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar previsão de Guaíra:", error);
         });
     },
-    getPrevisaoTempoPien: function() {
+    getPrevisaoTempoPien: function () {
       return axiosInstance.get('/weather/pien')
-        .then(function(response) {
+        .then(function (response) {
           this.previsaoPien = response.data;
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar previsão de Pien:", error);
         });
     },
-    updateTime: function() {
+    updateTime: function () {
       this.currentDate = new Date();
     },
-    getAniversariantes: function() {
+    getAniversariantes: function () {
       const mesAtual = new Date().getMonth() + 1;
       return axiosInstance.get('/aniversariantes', {
         params: { mes: mesAtual },
       })
-        .then(function(response) {
+        .then(function (response) {
           this.aniversariantes = response.data;
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar aniversariantes:", error);
         });
     },
-    getEvento: function() {
+    getEvento: function () {
       return axiosInstance.get(`/imagens/evento/${this.idEvento}`)
-        .then(function(response) {
+        .then(function (response) {
           this.fotos = response.data[0];
         }.bind(this))
-        .catch(function(error) {
+        .catch(function (error) {
           console.error("Erro ao buscar imagens do evento:", error);
         });
     },
     // Métodos para o slideshow de imagens
-    startSlideshow: function() {
+    startSlideshow: function () {
       this.stopSlideshow();
       this.timer = setInterval(this.nextSlide, 5000);
     },
-    stopSlideshow: function() {
+    stopSlideshow: function () {
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
     },
-    nextSlide: function() {
+    nextSlide: function () {
       if (this.currentIndex === this.fotos.length - 1) {
         this.getEvento();
       }
       this.currentIndex = (this.currentIndex + 1) % this.fotos.length;
     },
-    prevSlide: function() {
+    prevSlide: function () {
       this.currentIndex = (this.currentIndex - 1 + this.fotos.length) % this.fotos.length;
     },
-    setCurrentIndex: function(index) {
+    setCurrentIndex: function (index) {
       this.currentIndex = index;
       this.stopSlideshow();
       this.startSlideshow();
     },
     // Métodos para o carrossel de aniversariantes
-    startAniversarianteCarouselIfNeeded: function() {
+    startAniversarianteCarouselIfNeeded: function () {
       // Inicia o carrossel apenas se houver mais de 5 aniversariantes
       if (this.aniversariantes.length > 5) {
         this.startAniversarianteCarousel();
@@ -536,63 +544,63 @@ export default {
         this.stopAniversarianteCarousel();
       }
     },
-    startAniversarianteCarousel: function() {
+    startAniversarianteCarousel: function () {
       this.stopAniversarianteCarousel();
       this.aniversarianteTimer = setInterval(this.nextAniversariantePage, 5000); // Troca a cada 5 segundos
     },
-    stopAniversarianteCarousel: function() {
+    stopAniversarianteCarousel: function () {
       if (this.aniversarianteTimer) {
         clearInterval(this.aniversarianteTimer);
         this.aniversarianteTimer = null;
       }
     },
-    nextAniversariantePage: function() {
+    nextAniversariantePage: function () {
       if (this.aniversariantes.length <= 5 || this.isHoveringAniversariantes) {
         return; // Não há necessidade de rotação se todos cabem na tela ou se o mouse estiver sobre o carrossel
       }
-      
+
       // Avança para o próximo aniversariante, um por um
       this.currentAniversarianteIndex = (this.currentAniversarianteIndex + 1) % this.aniversariantes.length;
     },
-    prevAniversariantePage: function() {
+    prevAniversariantePage: function () {
       if (this.aniversariantes.length <= 5) {
         return;
       }
-      
+
       // Volta para o aniversariante anterior
       this.currentAniversarianteIndex = (this.currentAniversarianteIndex - 1 + this.aniversariantes.length) % this.aniversariantes.length;
     },
-    setAniversariantePage: function(index) {
+    setAniversariantePage: function (index) {
       this.currentAniversarianteIndex = index;
       this.stopAniversarianteCarousel();
       this.startAniversarianteCarousel();
     },
     // Outros métodos
-    toggleFullscreen: function() {
+    toggleFullscreen: function () {
       const elem = this.$el.querySelector('.relative');
       if (!document.fullscreenElement) {
-        elem.requestFullscreen().catch(function(err) {
+        elem.requestFullscreen().catch(function (err) {
           console.error("Erro ao entrar em tela cheia:", err);
         });
       } else {
         document.exitFullscreen();
       }
     },
-    handleResize: function() {
+    handleResize: function () {
       // Recalcular altura dos itens quando a janela for redimensionada
       this.calcularAlturaItemAniversariante();
     },
-    startNoticiaRotation: function() {
+    startNoticiaRotation: function () {
       this.stopNoticiaRotation();
       this.noticiaTimer = setInterval(this.nextNoticia, 8000);
     },
-    stopNoticiaRotation: function() {
+    stopNoticiaRotation: function () {
       if (this.noticiaTimer) {
         clearInterval(this.noticiaTimer);
         this.noticiaTimer = null;
       }
     },
-    nextNoticia: function() {
+    nextNoticia: function () {
       this.noticiaAtualIndex = (this.noticiaAtualIndex + 1) % this.noticias.length;
     }
   }
@@ -623,7 +631,7 @@ export default {
     min-width: 100%;
     max-height: 40vh;
   }
-  
+
   .aniversariantes-container {
     height: 180px;
   }
@@ -641,11 +649,11 @@ export default {
     width: 20rem;
     min-width: 20rem;
   }
-  
+
   .aniversariantes-container {
     height: 240px;
   }
-  
+
   .aniversariante-item {
     margin-bottom: 0.75rem;
     padding: 0.75rem;
@@ -689,9 +697,9 @@ export default {
 
 /* Efeito de máscara para o carrossel */
 .aniversariantes-container {
-  mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,1) 85%, 
-    rgba(0,0,0,0.3));
+  mask-image: linear-gradient(to bottom,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 0, 0.3));
 }
 
 /* Espaçamento consistente para aniversariantes */
