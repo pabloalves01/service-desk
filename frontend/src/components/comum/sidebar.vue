@@ -25,15 +25,11 @@
     <div class="nav-container">
       <div v-for="(section, sectionIndex) in navigationSections" :key="sectionIndex" class="nav-section">
         <div class="section-title" v-show="!isCollapsed">{{ section.title }}</div>
-        
+
         <div v-for="(item, itemIndex) in section.items" :key="itemIndex" class="nav-item-wrapper">
           <!-- Regular menu item -->
-          <router-link 
-            v-if="!item.children" 
-            :to="item.path" 
-            class="nav-item"
-            :class="{ 'active': currentPath === item.path }"
-          >
+          <router-link v-if="!item.children" :to="item.path" class="nav-item"
+            :class="{ 'active': currentPath === item.path }">
             <component :is="item.icon" class="nav-icon" />
             <span class="nav-text" v-show="!isCollapsed">{{ item.name }}</span>
             <div v-if="item.badge" class="badge" v-show="!isCollapsed">{{ item.badge }}</div>
@@ -41,30 +37,17 @@
 
           <!-- Collapsible menu item with children -->
           <div v-else class="nav-item-collapsible">
-            <div 
-              @click="toggleSubmenu(item)" 
-              class="nav-item"
-              :class="{ 'active': isSubmenuActive(item) }"
-            >
+            <div @click="toggleSubmenu(item)" class="nav-item" :class="{ 'active': isSubmenuActive(item) }">
               <component :is="item.icon" class="nav-icon" />
               <span class="nav-text" v-show="!isCollapsed">{{ item.name }}</span>
-              <chevron-down-icon 
-                v-show="!isCollapsed" 
-                class="submenu-arrow"
-                :class="{ 'rotate-180': item.expanded }"
-              />
+              <chevron-down-icon v-show="!isCollapsed" class="submenu-arrow" :class="{ 'rotate-180': item.expanded }" />
             </div>
 
             <!-- Submenu -->
             <transition name="submenu">
               <div v-if="item.expanded && !isCollapsed" class="submenu">
-                <router-link 
-                  v-for="(child, childIndex) in item.children" 
-                  :key="childIndex"
-                  :to="child.path"
-                  class="submenu-item"
-                  :class="{ 'active': currentPath === child.path }"
-                >
+                <router-link v-for="(child, childIndex) in item.children" :key="childIndex" :to="child.path"
+                  class="submenu-item" :class="{ 'active': currentPath === child.path }">
                   {{ child.name }}
                 </router-link>
               </div>
@@ -150,7 +133,7 @@ const showBadge = ref(!isCollapsed.value);
 const showSubmenuArrow = ref(!isCollapsed.value);
 const showUserInfo = ref(!isCollapsed.value);
 const showUserMenuButton = ref(!isCollapsed.value);
-  
+
 // Computed
 const currentPath = computed(() => route.path);
 
@@ -160,48 +143,42 @@ const navigationSections = ref([
     title: 'PRINCIPAIS',
     items: [
       { name: 'Eventos', path: '/', icon: Calendar },
-      { name: 'Imóveis', path: '/imoveis', icon: BookmarkIcon },
-      { 
-        name: 'Relatórios', 
-        path: '/relatorios', 
-        icon: ChartIcon,
-        expanded: false,
-        children: [
-          { name: 'Revenue', path: '/reports/revenue' },
-          { name: 'Expenses', path: '/reports/expenses' }
+      {
+        name: 'Equipe', path: '/equipe', icon: UsersIcon, expanded: false, children: [
+          { name: 'Aniversáriantes', path: '/gerenciar-aniversariantes', icon: Cake },
+
         ]
       },
-      { name: 'Equipe', path: '/team', icon: UsersIcon },
-      { name: 'Mensagens', path: '/messages', icon: MessageIcon, badge: '3' },
-      { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
+      // { name: 'Mensagens', path: '/messages', icon: MessageIcon, badge: '3' },
+      // { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
     ]
   },
-   {
-    title: 'ADMINISTRATIVO',
-    items: [
-      { name: 'Aniversáriantes', path: '/gerenciar-aniversariantes', icon: Cake },
-      { name: 'Setores', path: '/gerenciar-setores', icon: Users },
-      // { 
-      //   name: 'Relatórios', 
-      //   path: '/relatorios', 
-      //   icon: ChartIcon,
-      //   expanded: false,
-      //   children: [
-      //     { name: 'Revenue', path: '/reports/revenue' },
-      //     { name: 'Expenses', path: '/reports/expenses' }
-      //   ]
-      // },
-      { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
-    ]
-  },
-  {
-    title: 'APLICAÇÃO',
-    items: [
-      { name: 'Projects', path: '/projects', icon: FolderIcon },
-      { name: 'Performance', path: '/performance', icon: ChartIcon },
-      { name: 'Configurações', path: '/configuracoes', icon: SettingsIcon },
-    ]
-  }
+  // {
+  //   title: 'ADMINISTRATIVO',
+  //   items: [
+  //     // { name: 'Aniversáriantes', path: '/gerenciar-aniversariantes', icon: Cake },
+  //     { name: 'Setores', path: '/gerenciar-setores', icon: Users },
+  //     // { 
+  //     //   name: 'Relatórios', 
+  //     //   path: '/relatorios', 
+  //     //   icon: ChartIcon,
+  //     //   expanded: false,
+  //     //   children: [
+  //     //     { name: 'Revenue', path: '/reports/revenue' },
+  //     //     { name: 'Expenses', path: '/reports/expenses' }
+  //     //   ]
+  //     // },
+  //     { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
+  //   ]
+  // },
+  // {
+  //   title: 'APLICAÇÃO',
+  //   items: [
+  //     { name: 'Projects', path: '/projects', icon: FolderIcon },
+  //     { name: 'Performance', path: '/performance', icon: ChartIcon },
+  //     { name: 'Configurações', path: '/configuracoes', icon: SettingsIcon },
+  //   ]
+  // }
 ]);
 
 // Methods
@@ -217,7 +194,7 @@ const toggleSidebar = () => {
   showUserMenuButton.value = !isCollapsed.value;
 
   emit('collapse-change', isCollapsed.value);
-  
+
   // Save state to localStorage
   localStorage.setItem('sidebar-collapsed', isCollapsed.value);
 };

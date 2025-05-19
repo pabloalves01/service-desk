@@ -27,6 +27,7 @@ Route::get('/imagens/evento/{id}', [EventosController::class, 'imagensEvento']);
 Route::get('/aniversariantes', [SlideshowController::class, 'getAniversariantes']);
 Route::post('/aniversariante', [AniversariantesController::class, 'store']);
 Route::get('/aniversariante', [AniversariantesController::class, 'index']);
+Route::delete('/aniversariante/{id}', [AniversariantesController::class, 'destroy']);
 
 Route::get('/weather/imbituba', [WeatherController::class, 'Imbituba']);
 Route::get('/weather/rio-claro', [WeatherController::class, 'RioClaro']);

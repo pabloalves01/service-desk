@@ -53,4 +53,21 @@ class AniversariantesController extends Controller
             'data' => $request->all()
         ]);
     }
+
+    public function destroy($id)
+    {
+        $aniversariante = CorporacaoAniversariantes::find($id);
+
+        if (!$aniversariante) {
+            return response()->json([
+                'message' => 'Aniversariante não encontrado!'
+            ], 404);
+        }
+
+        $aniversariante->delete();
+
+        return response()->json([
+            'message' => 'Aniversariante excluído com sucesso!'
+        ]);
+    }
 }

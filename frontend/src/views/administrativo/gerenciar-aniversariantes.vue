@@ -11,9 +11,9 @@
       </template>
     </Breadcrumb>
     <!-- <h1 class="mb-4 text-xl font-bold text-gray-100">Gerenciar Aniversariantes</h1> -->
-    <DataTable size="small" :paginator="true" :value="aniversariantes" :loading="loading" :rows="15"
-      class="rounded-lg overflow-hidden" :rowHover="true" :showGridlines="true"
-      tableStyle="min-width: 60rem background-color: transparent;">
+    <DataTable v-if="aniversariantes.length > 0" :value="aniversariantes" :loading="loading" :rows="15"
+      :paginator="true" class="rounded-lg overflow-hidden" :rowHover="true" :showGridlines="true" :sortField="'id'"
+      :sortOrder="-1" tableStyle="min-width: 60rem background-color: transparent;">
       <Column field="id" header="ID" :sortable="true" style="width: 2%; text-align: center;"></Column>
       <Column field="nome" header="Nome" :sortable="true" style="width: 30%;"></Column>
       <Column field="setor" header="Setor" :sortable="true" style="width: 15%;"></Column>
@@ -21,12 +21,17 @@
       <Column header="Ações" style="width: 3%; text-align: center;">
         <template #body="{ data }">
           <div class="flex justify-center gap-2">
-            <Button icon="pi pi-pencil" severity="secondary" variant="text" rounded aria-label="Bookmark" />
-            <Button icon="pi pi-trash" severity="danger" variant="text" rounded aria-label="Bookmark" />
+            <Button icon="pi pi-trash" severity="danger" variant="text" rounded @click="deleteEmployee(data.id)" />
           </div>
         </template>
       </Column>
     </DataTable>
+
+    <!-- Exibe a mensagem quando não houver dados -->
+    <div v-else class="flex items-center justify-center h-40 text-gray-400">
+      Não existem aniversariantes cadastrados.
+    </div>
+    F
   </div>
   <Dialog v-model:visible="visible" header="Cadastrar Novo Aniversáriante" :style="{ width: '30rem' }">
     <span class="text-surface-500 dark:text-surface-400 block mb-8">Preencha as informações.</span>
@@ -131,18 +136,19 @@ export default {
           setor_id: this.aniversariante.setor,
           data_nascimento: this.aniversariante.data_nascimento,
         });
+        this.getAniversariantes();
         this.closeModal();
       } catch (error) {
         console.error('Erro ao salvar:', error);
       }
     },
-    editEmployee(employee) {
-      console.log('Editar:', employee);
-      // Implementar lógica de edição
-    },
-    deleteEmployee(id) {
-      console.log('Excluir:', id);
-      // Implementar lógica de exclusão
+    async deleteEmployee(id) {
+      try {
+        const response = await axiosInstance.delete(`/aniversariante/${id}`);
+        this.getAniversariantes();
+      } catch (error) {
+        console.error('Erro ao deletar:', error);
+      }
     },
   },
 };
