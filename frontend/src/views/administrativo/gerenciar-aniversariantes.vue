@@ -31,7 +31,6 @@
     <div v-else class="flex items-center justify-center h-40 text-gray-400">
       Não existem aniversariantes cadastrados.
     </div>
-    F
   </div>
   <Dialog v-model:visible="visible" header="Cadastrar Novo Aniversáriante" :style="{ width: '30rem' }">
     <span class="text-surface-500 dark:text-surface-400 block mb-8">Preencha as informações.</span>
@@ -94,10 +93,36 @@ export default {
         data_nascimento: '',
       },
       setores: [
-        { id: 1, name: 'Financeiro' },
-        { id: 2, name: 'Marketing' },
-        { id: 3, name: 'RH' },
-        { id: 4, name: 'TI' },
+        { id: 1, name: 'Almoxarifado' },
+        { id: 2, name: 'Amostras' },
+        { id: 3, name: 'Compras' },
+        { id: 4, name: 'Contas à pagar' },
+        { id: 5, name: 'Copa' },
+        { id: 6, name: 'Crédito e Cobrança' },
+        { id: 7, name: 'Cimentícios' },
+        { id: 8, name: 'Engenharia Civil' },
+        { id: 9, name: 'Expedição' },
+        { id: 10, name: 'Faturamento' },
+        { id: 11, name: 'Gerente Comercial' },
+        { id: 12, name: 'Gerente Geral' },
+        { id: 13, name: 'Guarita' },
+        { id: 14, name: 'Jurídico' },
+        { id: 15, name: 'Jovem Aprendiz' },
+        { id: 16, name: 'Logistica' },
+        { id: 17, name: 'Laboratório' },
+        { id: 18, name: 'Manutenção' },
+        { id: 19, name: 'Marketing' },
+        { id: 20, name: 'PCP' },
+        { id: 21, name: 'Pedreiro' },
+        { id: 22, name: 'QSSMA' },
+        { id: 23, name: 'Recepção' },
+        { id: 24, name: 'Resinados' },
+        { id: 25, name: 'RH' },
+        { id: 26, name: 'Serviços Gerais' },
+        { id: 27, name: 'Supervisor' },
+        { id: 28, name: 'T.I' },
+        { id: 29, name: 'Trainee' },
+        { id: 30, name: 'Diretor' }
       ],
       breadcrumbItems: [
         { label: 'Eventos', route: '/eventos', icon: 'pi pi-calendar' },
