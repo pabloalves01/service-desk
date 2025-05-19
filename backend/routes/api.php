@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\AuthController;
 use App\Http\Controllers\corporacao\AniversariantesController;
+use App\Http\Controllers\corporacao\NoticiasController;
 use App\Http\Controllers\corporacao\SlideshowController;
 use App\Http\Controllers\eventos\EventosController;
 use App\Http\Controllers\WeatherController;
@@ -28,6 +29,10 @@ Route::get('/aniversariantes', [SlideshowController::class, 'getAniversariantes'
 Route::post('/aniversariante', [AniversariantesController::class, 'store']);
 Route::get('/aniversariante', [AniversariantesController::class, 'index']);
 Route::delete('/aniversariante/{id}', [AniversariantesController::class, 'destroy']);
+
+Route::post('/noticias', [NoticiasController::class, 'store']);
+Route::get('/noticias', [NoticiasController::class, 'index']);
+Route::delete('/noticia/{id}', [NoticiasController::class, 'destroy']);
 
 Route::get('/weather/imbituba', [WeatherController::class, 'Imbituba']);
 Route::get('/weather/rio-claro', [WeatherController::class, 'RioClaro']);

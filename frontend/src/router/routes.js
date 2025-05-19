@@ -70,18 +70,27 @@ const routes = [
     name: "slideshow-corporativo",
     component: () => import("../views/eventos/slideshow-corporativo.vue"),
   },
-    {
+  {
     path: "/gerenciar-aniversariantes",
     name: "gerenciar-aniversariantes",
-    component: () => import("../views/administrativo/gerenciar-aniversariantes.vue"),
+    component: () =>
+      import("../views/administrativo/gerenciar-aniversariantes.vue"),
     meta: {
       requiresAuth: true,
     },
   },
-    {
+  {
     path: "/gerenciar-setores",
     name: "gerenciar-setores",
     component: () => import("../views/administrativo/gerenciar-setores.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/gerenciar-noticias",
+    name: "gerenciar-noticias",
+    component: () => import("../views/noticias/gerenciar-noticias.vue"),
     meta: {
       requiresAuth: true,
     },

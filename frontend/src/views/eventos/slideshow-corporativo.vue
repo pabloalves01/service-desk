@@ -105,7 +105,7 @@
                       </div>
                     </div>
                     <span class="font-semibold text-sm text-white truncate">{{ previsao ? previsao.city : 'Imbituba'
-                      }}</span>
+                    }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
@@ -128,12 +128,13 @@
                       </div>
                     </div>
                     <span class="font-semibold text-sm text-white truncate">{{ previsaoPien ? previsaoPien.city : 'Pien'
-                      }}</span>
+                    }}</span>
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoPien ?  Math.floor(previsaoPien.temperature) + '°' : '--°'
-                      }}</span>
+                    <span class="text-sm font-bold text-white">{{ previsaoPien ? Math.floor(previsaoPien.temperature) +
+                      '°' : '--°'
+                    }}</span>
                   </div>
                 </div>
 
@@ -154,7 +155,8 @@
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoRioClaro ?  Math.floor(previsaoRioClaro.temperature) + '°'
+                    <span class="text-sm font-bold text-white">{{ previsaoRioClaro ?
+                      Math.floor(previsaoRioClaro.temperature) + '°'
                       : '--°' }}</span>
                   </div>
                 </div>
@@ -176,7 +178,8 @@
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <Thermometer size="16" />
-                    <span class="text-sm font-bold text-white">{{ previsaoGuaira ?  Math.floor(previsaoGuaira.temperature) + '°' :
+                    <span class="text-sm font-bold text-white">{{ previsaoGuaira ?
+                      Math.floor(previsaoGuaira.temperature) + '°' :
                       '--°' }}</span>
                   </div>
                 </div>
@@ -347,18 +350,6 @@ export default {
 
       // Notícias de exemplo
       noticias: [
-        {
-          titulo: 'Expansão do Brics: bloco anuncia seis novos membros',
-          descricao: 'O Brics, formado por Brasil, Rússia, Índia, China e África do Sul, anunciou um processo de expansão do bloco.'
-        },
-        {
-          titulo: 'Novo recorde na bolsa de valores',
-          descricao: 'Índices atingem máxima histórica impulsionados por resultados positivos no setor de tecnologia.'
-        },
-        {
-          titulo: 'Previsão de chuvas intensas no sul do país',
-          descricao: 'Meteorologistas alertam para possibilidade de temporais nos próximos dias em toda região sul.'
-        }
       ]
     };
   },
@@ -382,6 +373,7 @@ export default {
     this.getEvento();
     this.getAniversariantes();
     this.fetchPrevisao();
+    this.getNoticias();
   },
   mounted: function () {
     this.updateTime();
@@ -430,6 +422,14 @@ export default {
     }
   },
   methods: {
+    async getNoticias() {
+      try {
+        const response = await axiosInstance.get('/noticias');
+        this.noticias = response.data.data;
+      } catch (error) {
+        console.error('Error fetching noticias:', error);
+      }
+    },
     // Calcula a altura real de um item de aniversariante para usar no carrossel
     calcularAlturaItemAniversariante: function () {
       const items = this.$el.querySelectorAll('.aniversariante-item');

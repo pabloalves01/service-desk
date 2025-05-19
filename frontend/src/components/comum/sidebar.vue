@@ -91,6 +91,7 @@ import {
   Calendar,
   Cake,
   Users,
+  Newspaper,
 } from 'lucide-vue-next';
 
 // Props with defaults
@@ -148,6 +149,8 @@ const navigationSections = ref([
 
         ]
       },
+      { name: 'Notícias', path: '/gerenciar-noticias', icon: Newspaper  },
+
       // { name: 'Mensagens', path: '/messages', icon: MessageIcon, badge: '3' },
       // { name: 'Calendário', path: '/calendar', icon: CalendarIcon },
     ]
