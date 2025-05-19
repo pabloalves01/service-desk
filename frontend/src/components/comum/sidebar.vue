@@ -6,13 +6,12 @@
         <div class="logo">
           <layout-icon class="logo-icon" />
         </div>
-        <span class="logo-text" v-show="!isCollapsed">{{ logoText }}</span>
+        <span class="logo-text" v-show="!isCollapsed">{{ $globals.appName() }}</span>
       </div>
       <button @click="toggleSidebar" class="toggle-button">
         <chevron-left-icon :class="{ 'rotate-180': isCollapsed }" />
       </button>
     </div>
-
     <!-- Search bar -->
     <div class="search-container" v-show="!isCollapsed">
       <div class="search-input">
@@ -276,7 +275,7 @@ onMounted(() => {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: #4f46e5;
+  background-color: #f5333f;
   border-radius: 8px;
 }
 

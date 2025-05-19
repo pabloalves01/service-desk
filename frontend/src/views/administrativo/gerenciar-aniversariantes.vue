@@ -122,7 +122,9 @@ export default {
         { id: 27, name: 'Supervisor' },
         { id: 28, name: 'T.I' },
         { id: 29, name: 'Trainee' },
-        { id: 30, name: 'Diretor' }
+        { id: 30, name: 'Diretor' },
+        { id: 31, name: 'Metalurgia' },
+        { id: 32, name: 'CRM' },
       ],
       breadcrumbItems: [
         { label: 'Eventos', route: '/eventos', icon: 'pi pi-calendar' },
