@@ -592,7 +592,7 @@ export default {
     },
     startNoticiaRotation: function () {
       this.stopNoticiaRotation();
-      this.noticiaTimer = setInterval(this.nextNoticia, 8000);
+      this.noticiaTimer = setInterval(this.nextNoticia, 12000);
     },
     stopNoticiaRotation: function () {
       if (this.noticiaTimer) {
